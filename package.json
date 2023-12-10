@@ -1,5 +1,6 @@
 {
   "name": "elaria-engine",
+  "type": "module",
   "version": "1.0.0",
   "description": "The best JavaScript engine for noobs.",
   "main": "index.js",

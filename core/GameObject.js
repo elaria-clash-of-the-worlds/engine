@@ -5,11 +5,11 @@ class GameObject {
     constructor(name = "GameObject (new)") {
         this.components = [];
         this.name = name;
+        this._activeSelf = true;
         this._awakeCalled = false;
         this._startCalled = false;
         this._onEnableCalled = false;
         this._onDisableCalled = false;
-        this._activeSelf = true;
         this._transform = this.addComponent(Transform);
     }
 
@@ -28,7 +28,7 @@ class GameObject {
         return this._activeSelf;
     }
 
-    update() {
+    update(dt) {
         if (!this._awakeCalled) {
             this._awakeCalled = true;
             for (const component of this.components) {
@@ -50,7 +50,7 @@ class GameObject {
             }
         } else {
             for (const component of this.components) {
-                component.update();
+                component.update(dt);
             }
         }
 
@@ -59,6 +59,16 @@ class GameObject {
             for (const component of this.components) {
                 component.onDisable();
             }
+        }
+    }
+
+    render() {
+        if (!this._startCalled || !this.activeSelf) {
+            return;
+        }
+
+        for (const component of this.components) {
+            component.render();
         }
     }
 
@@ -98,6 +108,8 @@ class GameObject {
 
         const newComponent = new component();
         newComponent.gameObject = this;
+        newComponent.transform = this.transform;
+
         this.components.push(newComponent);
         return newComponent;
     }

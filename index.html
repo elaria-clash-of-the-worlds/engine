@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script type="module">
+    import ElariaGame from "./core/ElariaGame.js";
+    import ExampleLevel1 from "./examples/ExampleLevel1.js";
+    import ExampleLevel2 from "./examples/ExampleLevel2.js";
+    import SceneManager from "./core/SceneManager.js";
+
+    const game = new ElariaGame(document.getElementById("canvas"));
+    SceneManager.registerScene(new ExampleLevel1());
+    SceneManager.registerScene(new ExampleLevel2());
+    game.start(0);
+</script>
+
+<body>
+<canvas id="canvas"></canvas>
+</body>
+</html>

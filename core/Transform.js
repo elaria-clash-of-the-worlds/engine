@@ -1,5 +1,6 @@
 import Component from "./Component.js";
 import Scene from "./Scene.js";
+import Vector2D from "./Vector2D.js";
 
 class Transform extends Component {
 
@@ -7,6 +8,8 @@ class Transform extends Component {
         super();
         this._children = [];
         this._parent = null;
+        this.position = Vector2D.zero;
+        this.rotation = 0;
     }
 
     /**

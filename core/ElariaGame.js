@@ -1,40 +1,61 @@
 import SceneManager from "./SceneManager.js";
-import SceneDescription from "./SceneDescription.js";
 
 class ElariaGame {
-    constructor() {
-        this._scenes = [];
-        this._gameObjects = [];
+    static instance;
+    static deltaTime = 0;
+    #activeScene;
+    #canvas;
+
+    constructor(canvasElement) {
+        this.#canvas = canvasElement;
+        this.#activeScene = null;
+        SceneManager._gameInstance = this;
+
+        ElariaGame.instance = this;
+        // const {width, height} = canvasElement.getBoundingClientRect();
+        // console.log(width);
+        // console.log(height);
     }
 
-    #gameLoop(){
-        window.requestAnimationFrame(this.#gameLoop.bind(this));
-        this.#update();
+    #startGameLoop(){
+        let lastTime = performance.now();
+
+        const gameLoop = (now) => {
+            this.#update();
+            this.#render();
+            ElariaGame.deltaTime = (now - lastTime) / 1000.0;
+            lastTime = now;
+
+            window.requestAnimationFrame(gameLoop);
+        };
+
+        window.requestAnimationFrame(gameLoop);
     }
 
     #update() {
-        for (const gameObject of this._gameObjects) {
-            gameObject.update();
+        if (this.#activeScene) {
+            this.#activeScene.update(ElariaGame.deltaTime);
+        }
+
+        if (this.#activeScene !== SceneManager.activeScene) {
+            this.#activeScene = SceneManager.activeScene;
         }
     }
 
-    registerScene(scene) {
-        if (!(scene instanceof SceneDescription))
-        {
-            throw new Error("Scene must be an instance of SceneDescription");
+    #render() {
+        if (this.#activeScene) {
+            ElariaGame.canvas.getContext("2d").clearRect(0, 0, ElariaGame.canvas.width, ElariaGame.canvas.height);
+            this.#activeScene.render();
         }
-        this._scenes.push(scene);
+    }
+
+    static get canvas() {
+        return ElariaGame.instance.#canvas;
     }
     
     start(sceneIndex) {
-        if (sceneIndex < 0 || sceneIndex >= this._scenes.length) {
-            throw new Error("Invalid scene index");
-        }
-
-        SceneManager._gameInstance = this;
         SceneManager.loadScene(sceneIndex);
-
-        this.#gameLoop();
+        this.#startGameLoop();
     }
 }
 

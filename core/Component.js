@@ -1,21 +1,26 @@
 class Component {
-    constructor () {
+    constructor() {
         this.gameObject = null;
+        this.transform = null;
     }
 
-    awake () {
+    awake() {
     }
 
-    start () {
+    start() {
     }
 
-    onEnable () {
+    onEnable() {
     }
 
-    onDisable () {
+    onDisable() {
     }
 
-    update () {
+    // eslint-disable-next-line no-unused-vars
+    update(dt) {
+    }
+
+    render() {
     }
 }
 

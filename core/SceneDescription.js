@@ -1,21 +1,23 @@
-import GameObject from "./GameObject.js";
 import Scene from "./Scene.js";
+import GameObject from "./GameObject.js";
 
 class SceneDescription {
-    constructor () {
-        this._gameObjects = [];
-        this._scene = new Scene();
+    constructor() {
+        this._scene = null;
     }
 
-    instantiate (transform=null) {
+    createGameObject() {
         const gameObject = new GameObject();
-        gameObject.transform.setParent(transform);
-        this._gameObjects.push(gameObject);
         this._scene._gameObjects.push(gameObject);
         return gameObject;
     }
 
-    create () {
+    build() {
+    }
+
+    create() {
+        this._scene = new Scene();
+        this.build();
         return this._scene;
     }
 }

@@ -1,6 +1,7 @@
 import Component from "../core/Component.js";
 import ElariaGame from "../core/ElariaGame.js";
 import SceneManager from "../core/SceneManager.js";
+import Debug from "../misc/Debug.js";
 
 class MyComponent extends Component {
     #ctx;
@@ -19,6 +20,7 @@ class MyComponent extends Component {
 
     start() {
         console.log("MyComponent : Start");
+        console.log(Debug.getSceneHierarchy());
     }
 
     update(dt) {

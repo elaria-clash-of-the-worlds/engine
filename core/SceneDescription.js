@@ -6,8 +6,8 @@ class SceneDescription {
         this._scene = null;
     }
 
-    createGameObject() {
-        const gameObject = new GameObject();
+    createGameObject(name = "GameObject (new)") {
+        const gameObject = new GameObject(name);
         this._scene._gameObjects.push(gameObject);
         return gameObject;
     }

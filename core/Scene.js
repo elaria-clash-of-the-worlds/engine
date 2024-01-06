@@ -1,17 +1,20 @@
+import Transform from "./Transform.js";
+
 class Scene {
     constructor() {
         this._gameObjects = [];
+        this._container = new Transform();
     }
 
-    update(dt) {
+    _update(dt) {
         for (const gameObject of this._gameObjects) {
-            gameObject.update(dt);
+            gameObject._update(dt);
         }
     }
 
-    render() {
+    _render() {
         for (const gameObject of this._gameObjects) {
-            gameObject.render();
+            gameObject._render();
         }
     }
 }

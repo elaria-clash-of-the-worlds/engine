@@ -1,15 +1,22 @@
 import Component from "./Component.js";
-import Scene from "./Scene.js";
 import Vector2D from "./Vector2D.js";
+import SceneManager from "./SceneManager.js";
 
 class Transform extends Component {
-
+    #parent;
     constructor() {
         super();
         this._children = [];
-        this._parent = null;
+        this.#parent = null;
         this.position = Vector2D.zero;
         this.rotation = 0;
+    }
+
+    _afterSceneLoaded() {
+        // Set scene container as parent if it's null.
+        if (!this.#parent) {
+            this.setParent(null);
+        }
     }
 
     /**
@@ -20,44 +27,51 @@ class Transform extends Component {
     }
 
     /**
-     * Returns the parent of the Transform.
+     * Returns the parent of the current object.
+     *
+     * @return {Transform} The parent of the current object, or null if the current object is the root parent.
      */
     get parent() {
-        if (this._parent instanceof Scene) {
+        if (this.#parent === SceneManager.activeScene._container) {
             return null;
         }
-        return this._parent;
+        return this.#parent;
     }
 
     /**
      * Sets the parent of the current object.
      *
-     * @param {Transform} parent - the parent object to set.
+     * @param {Transform} newParent - the parent object to set.
      * @throws {Error} Throws an error if the parent is not an instance of Transform.
      */
-    setParent(parent) {
-        if (parent === null || parent === undefined) {
-            if (this.parent === null) {
-                return;
-            }
-            // Set the scene container as parent
+    setParent(newParent) {
+        if (!newParent) {
+            this.#parent = SceneManager.activeScene._container;
+            SceneManager.activeScene._container._children.push(this);
             return;
         }
 
-        if (!(parent instanceof Transform)) {
+        if (!(newParent instanceof Transform)) {
             throw new Error("Parent must be an instance of Transform");
         }
 
-        if (parent._children.includes(this)) {
-            return;
+        if (!newParent._children.includes(this)) {
+            if (this.#parent != null) {
+                this.#parent.children.splice(this.#parent.children.indexOf(this), 1);
+            }
+            this.#parent = newParent;
+            newParent._children.push(this);
         }
-
-        this._parent = parent;
-        parent._children.push(this);
     }
 
+    /**
+     * Moves the object to a new sibling index within its parent.
+     *
+     * @param {number} index - The index of the new sibling position.
+     * @throws {Error} - If the index is out of bounds.
+     */
     setSiblingIndex(index) {
-        const parentChildren = this._parent._children;
+        const parentChildren = this.#parent._children;
         if (index < 0 || index >= parentChildren.length) {
             throw new Error(`Invalid sibling index - ${index}! The object has ${parentChildren.length} children.`);
         }
@@ -65,8 +79,13 @@ class Transform extends Component {
         parentChildren.splice(index, 0, child);
     }
 
+    /**
+     * Return the index of the current object within its parent's children array.
+     *
+     * @return {int} The index of the current object within its parent's children array.
+     */
     getSiblingIndex() {
-        return this._parent._children.indexOf(this);
+        return this.#parent._children.indexOf(this);
     }
 
     /**

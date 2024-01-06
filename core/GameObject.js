@@ -1,5 +1,6 @@
 import Transform from "./Transform.js";
 import Component from "./Component.js";
+import transform from "./Transform.js";
 
 class GameObject {
     constructor(name = "GameObject (new)") {
@@ -28,7 +29,13 @@ class GameObject {
         return this._activeSelf;
     }
 
-    update(dt) {
+    _afterSceneLoaded() {
+        for (const component of this.components) {
+            component._afterSceneLoaded();
+        }
+    }
+
+    _update(dt) {
         if (!this._awakeCalled) {
             this._awakeCalled = true;
             for (const component of this.components) {
@@ -62,7 +69,7 @@ class GameObject {
         }
     }
 
-    render() {
+    _render() {
         if (!this._startCalled || !this.activeSelf) {
             return;
         }
@@ -125,9 +132,9 @@ class GameObject {
     }
 
     /**
-     * Removes a component from GameObject.
+     * Removes a component from the list of components.
      *
-     * @param component - the component to be removed
+     * @param {Object} component - The component to be removed.
      */
     removeComponent(component) {
         if (component.prototype instanceof Transform) {

@@ -4,6 +4,9 @@ class Component {
         this.transform = null;
     }
 
+    _afterSceneLoaded() {
+    }
+
     awake() {
     }
 

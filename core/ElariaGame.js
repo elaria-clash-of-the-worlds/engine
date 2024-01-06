@@ -34,7 +34,7 @@ class ElariaGame {
 
     #update() {
         if (this.#activeScene) {
-            this.#activeScene.update(ElariaGame.deltaTime);
+            this.#activeScene._update(ElariaGame.deltaTime);
         }
 
         if (this.#activeScene !== SceneManager.activeScene) {
@@ -45,7 +45,7 @@ class ElariaGame {
     #render() {
         if (this.#activeScene) {
             ElariaGame.canvas.getContext("2d").clearRect(0, 0, ElariaGame.canvas.width, ElariaGame.canvas.height);
-            this.#activeScene.render();
+            this.#activeScene._render();
         }
     }
 

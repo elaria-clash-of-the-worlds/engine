@@ -17,7 +17,7 @@ class ElariaGame {
         // console.log(height);
     }
 
-    #startGameLoop(){
+    #startGameLoop() {
         let lastTime = performance.now();
 
         const gameLoop = (now) => {
@@ -38,6 +38,8 @@ class ElariaGame {
         }
 
         if (this.#activeScene !== SceneManager.activeScene) {
+            if (this.#activeScene != null)
+                this.#activeScene._onDestroy();
             this.#activeScene = SceneManager.activeScene;
         }
     }
@@ -52,7 +54,7 @@ class ElariaGame {
     static get canvas() {
         return ElariaGame.instance.#canvas;
     }
-    
+
     start(sceneIndex) {
         SceneManager.loadScene(sceneIndex);
         this.#startGameLoop();

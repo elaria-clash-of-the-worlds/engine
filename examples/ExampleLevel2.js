@@ -3,7 +3,7 @@ import TipaSprite from "./TipaSprite.js";
 
 class ExampleLevel2 extends SceneDescription {
     constructor () {
-        super();
+        super("ExampleLevel2");
     }
 
     build () {

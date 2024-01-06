@@ -19,6 +19,9 @@ class Component {
     onDisable() {
     }
 
+    onDestroy() {
+    }
+
     // eslint-disable-next-line no-unused-vars
     update(dt) {
     }

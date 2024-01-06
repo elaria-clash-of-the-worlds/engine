@@ -3,7 +3,7 @@ import MyComponent from "./MyComponent.js";
 
 class ExampleLevel1 extends SceneDescription {
     constructor () {
-        super();
+        super("ExampleLevel1");
     }
 
     build () {

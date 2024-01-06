@@ -1,22 +1,22 @@
 import Transform from "./Transform.js";
 import Component from "./Component.js";
-import transform from "./Transform.js";
 
 class GameObject {
-    constructor(name = "GameObject (new)") {
+    #activeSelf = true;
+    #awakeCalled = false;
+    #startCalled = false;
+    #onEnableCalled = false;
+    #onDisableCalled = false;
+    
+    constructor() {
         this.components = [];
-        this.name = name;
-        this._activeSelf = true;
-        this._awakeCalled = false;
-        this._startCalled = false;
-        this._onEnableCalled = false;
-        this._onDisableCalled = false;
+        this.name = "GameObject";
         this._transform = this.addComponent(Transform);
     }
 
     /**
      * The Transform attached to this GameObject.
-     * @return {Transform} The value of the transform property.
+     * @return {import("./Transform.js").Transform} The value of the transform property.
      */
     get transform() {
         return this._transform;
@@ -24,9 +24,11 @@ class GameObject {
 
     /**
      * Whether the GameObject is active in the hierarchy or not.
+     *
+     * @return {boolean}
      */
     get activeSelf() {
-        return this._activeSelf;
+        return this.#activeSelf;
     }
 
     _afterSceneLoaded() {
@@ -36,22 +38,22 @@ class GameObject {
     }
 
     _update(dt) {
-        if (!this._awakeCalled) {
-            this._awakeCalled = true;
+        if (!this.#awakeCalled) {
+            this.#awakeCalled = true;
             for (const component of this.components) {
                 component.awake();
             }
         }
 
-        if (this.activeSelf && !this._onEnableCalled) {
-            this._onEnableCalled = true;
+        if (this.activeSelf && !this.#onEnableCalled) {
+            this.#onEnableCalled = true;
             for (const component of this.components) {
                 component.onEnable();
             }
         }
 
-        if (!this._startCalled) {
-            this._startCalled = true;
+        if (!this.#startCalled) {
+            this.#startCalled = true;
             for (const component of this.components) {
                 component.start();
             }
@@ -61,8 +63,8 @@ class GameObject {
             }
         }
 
-        if (!this.activeSelf && !this._onDisableCalled) {
-            this._onDisableCalled = true;
+        if (!this.activeSelf && !this.#onDisableCalled) {
+            this.#onDisableCalled = true;
             for (const component of this.components) {
                 component.onDisable();
             }
@@ -70,7 +72,7 @@ class GameObject {
     }
 
     _render() {
-        if (!this._startCalled || !this.activeSelf) {
+        if (!this.#startCalled || !this.activeSelf) {
             return;
         }
 
@@ -79,21 +81,28 @@ class GameObject {
         }
     }
 
+    _onDestroy() {
+        for (const component of this.components) {
+            component.onDestroy();
+        }
+    }
+
     /**
-     * Activates/Deactivates the GameObject, depending on the given true or false value.
+     * Sets the active state of the GameObject.
+     * @param {boolean} value - The desired active state (true for active, false for inactive).
      */
     setActive(value) {
-        if (this._activeSelf === value) {
+        if (this.#activeSelf === value) {
             return;
         }
 
-        this._activeSelf = value;
+        this.#activeSelf = value;
 
         if (value) {
-            this._onEnableCalled = false;
+            this.#onEnableCalled = false;
             // Call OnEnable on all components and hierarchy children
         } else {
-            this._onDisableCalled = false;
+            this.#onDisableCalled = false;
             // Call OnDisable on all components and hierarchy children
         }
     }

@@ -2,12 +2,15 @@ import Scene from "./Scene.js";
 import GameObject from "./GameObject.js";
 
 class SceneDescription {
-    constructor() {
+    #sceneName;
+    constructor(sceneName = "New Scene") {
         this._scene = null;
+        this.#sceneName = sceneName;
     }
 
-    createGameObject(name = "GameObject (new)") {
-        const gameObject = new GameObject(name);
+    createGameObject(name = "GameObject") {
+        const gameObject = new GameObject();
+        gameObject.name = name;
         this._scene._gameObjects.push(gameObject);
         return gameObject;
     }
@@ -16,7 +19,7 @@ class SceneDescription {
     }
 
     create() {
-        this._scene = new Scene();
+        this._scene = new Scene(this.#sceneName);
         this.build();
         return this._scene;
     }

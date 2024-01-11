@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./elaria/thirdparty/keydrown.js"></script>
+    <script type="module">
+        import ElariaGame from "./elaria/core/ElariaGame.js";
+        import ExampleLevel1 from "./elaria/examples/ExampleLevel1.js";
+        import ExampleLevel2 from "./elaria/examples/ExampleLevel2.js";
+        import SceneManager from "./elaria/core/SceneManager.js";
+
+        const game = new ElariaGame(document.getElementById("canvas"));
+        SceneManager.registerScene(new ExampleLevel1());
+        SceneManager.registerScene(new ExampleLevel2());
+        game.start(0);
+    </script>
 </head>
 
-<script type="module">
-    import ElariaGame from "./core/ElariaGame.js";
-    import ExampleLevel1 from "./examples/ExampleLevel1.js";
-    import ExampleLevel2 from "./examples/ExampleLevel2.js";
-    import SceneManager from "./core/SceneManager.js";
-
-    const game = new ElariaGame(document.getElementById("canvas"));
-    SceneManager.registerScene(new ExampleLevel1());
-    SceneManager.registerScene(new ExampleLevel2());
-    game.start(0);
-</script>
-
 <body>
-<canvas id="canvas"></canvas>
+    <canvas id="canvas"></canvas>
 </body>
+
 </html>

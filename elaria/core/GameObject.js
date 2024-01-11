@@ -7,11 +7,12 @@ class GameObject {
     #startCalled = false;
     #onEnableCalled = false;
     #onDisableCalled = false;
-
+    #transform;
+    
     constructor() {
         this.components = [];
         this.name = "GameObject";
-        this._transform = this.addComponent(Transform);
+        this.#transform = this.addComponent(Transform);
     }
 
     /**
@@ -19,7 +20,7 @@ class GameObject {
      * @return {import("./Transform.js").Transform} The value of the transform property.
      */
     get transform() {
-        return this._transform;
+        return this.#transform;
     }
 
     /**

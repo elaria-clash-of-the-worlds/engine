@@ -4,11 +4,12 @@ import SceneManager from "./SceneManager.js";
 
 class Transform extends Component {
     #parent;
+
     constructor() {
         super();
         this._children = [];
         this.#parent = null;
-        this.position = Vector2D.zero;
+        this.localPosition = Vector2D.zero;
         this.rotation = 0;
     }
 
@@ -17,6 +18,19 @@ class Transform extends Component {
         if (!this.#parent) {
             this.setParent(null);
         }
+    }
+
+    get position() {
+        // For Scene container
+        if (this.#parent == null) {
+            return Vector2D.zero;
+        }
+
+        return this.#parent.position.add(this.localPosition);
+    }
+
+    set position(newPosition) {
+        this.localPosition = newPosition.sub(this.#parent.position);
     }
 
     /**
@@ -46,7 +60,9 @@ class Transform extends Component {
      */
     setParent(newParent) {
         if (!newParent) {
+            const previousPosition = this.position;
             this.#parent = SceneManager.activeScene._container;
+            this.position = previousPosition;
             SceneManager.activeScene._container._children.push(this);
             return;
         }
@@ -59,7 +75,9 @@ class Transform extends Component {
             if (this.#parent != null) {
                 this.#parent.children.splice(this.#parent.children.indexOf(this), 1);
             }
+            const previousPosition = this.position;
             this.#parent = newParent;
+            this.position = previousPosition;
             newParent._children.push(this);
         }
     }

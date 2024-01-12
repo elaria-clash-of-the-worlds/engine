@@ -1,5 +1,6 @@
 import SceneDescription from "../core/SceneDescription.js";
 import Player from "./Player.js";
+import Sprite from "../core/Sprite.js";
 
 class ExampleLevel1 extends SceneDescription {
     constructor() {
@@ -8,7 +9,9 @@ class ExampleLevel1 extends SceneDescription {
 
     build() {
         const player = this.createGameObject("Player");
-        const myComponent = player.addComponent(Player);
+        player.addComponent(Player);
+        const sprite = player.addComponent(Sprite);
+        sprite.imageSource = "https://mosnapitki.ru/images/cms/thumbs/8c856c34813e8e6eaa248115eef774bea5ffd7a1/sprite_lemon_lime_330ml__535_535_1_100.jpg"
     }
 }
 

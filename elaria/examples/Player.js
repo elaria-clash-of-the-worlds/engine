@@ -1,20 +1,12 @@
 import Component from "../core/Component.js";
-import ElariaGame from "../core/ElariaGame.js";
-import Sprite from "../core/Sprite.js";
 import Vector2D from "../core/Vector2D.js";
 import Debug from "../debug/Debug.js";
 
 export default class Player extends Component {
-    #ctx;
 
     constructor() {
         super();
         this.velocity = new Vector2D(0, 0);
-        this.sprite = new Sprite("https://mosnapitki.ru/images/cms/thumbs/8c856c34813e8e6eaa248115eef774bea5ffd7a1/sprite_lemon_lime_330ml__535_535_1_100.jpg");
-    }
-
-    awake() {
-        this.#ctx = ElariaGame.canvas.getContext("2d");
     }
 
     start() {
@@ -40,15 +32,9 @@ export default class Player extends Component {
             this.velocity.x += acceleration;
         });
 
-        this.transform.position.x += this.velocity.x * dt;
-        this.transform.position.y += this.velocity.y * dt;
+        this.transform.position = this.transform.position.add(new Vector2D(this.velocity.x * dt, this.velocity.y * dt));
 
         this.velocity.x *= 0.95;
         this.velocity.y *= 0.95;
-    }
-
-    render() {
-        this.#ctx.fillStyle = "green";
-        this.#ctx.drawImage(this.sprite.image, this.gameObject.transform.position.x, this.gameObject.transform.position.y);
     }
 };

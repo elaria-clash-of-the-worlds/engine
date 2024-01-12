@@ -8,7 +8,6 @@ class ExampleLevel2 extends SceneDescription {
 
     build() {
         const player = this.createGameObject();
-        const tipaSprite = player.addComponent(TipaSprite);
     }
 
     onKey(key, direction) {

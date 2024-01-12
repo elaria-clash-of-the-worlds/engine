@@ -7,11 +7,12 @@ import SceneManager from "../core/SceneManager.js";
 
 export default class Player extends Component {
     static MAX_SPEED = 500;
+    static MIN_ACCELERATION = 10;
 
     constructor() {
         super();
         this.velocity = new Vector2D(0, 0);
-        this.acceleration = 10;
+        this.acceleration = Player.MIN_ACCELERATION;
         this.friction = 0.95;
         this.delay = 0;
         this.loadSceneIndex = 0;
@@ -22,7 +23,7 @@ export default class Player extends Component {
     }
 
     update(dt) {
-        this.acceleration += (kd.SHIFT.isDown() ? 1 : -1) * this.acceleration * dt;
+        this.acceleration = Math.max(Player.MIN_ACCELERATION, this.acceleration + (kd.SHIFT.isDown() ? 1 : -1) * this.acceleration * dt);
 
         if (kd.W.isDown()) {
             if (this.velocity.length <= Player.MAX_SPEED)

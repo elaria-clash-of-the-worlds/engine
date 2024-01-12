@@ -9,8 +9,6 @@ export default class CircleMover extends Component {
         this.speed = 0.2;
     }
 
-
-
     update(dt) {
         let x = this.transform.parent.position.x;
         let y = this.transform.parent.position.y;

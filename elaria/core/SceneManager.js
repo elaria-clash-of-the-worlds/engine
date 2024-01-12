@@ -37,6 +37,7 @@ class SceneManager {
         if (sceneIndex < 0 || sceneIndex >= this.#scenes.length) {
             throw new Error("Invalid scene index");
         }
+
         document.removeEventListener('keyup', this.#activeScene?.keyHandler);
         document.removeEventListener('keydown', this.#activeScene?.keyHandler);
 

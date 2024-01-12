@@ -3,6 +3,7 @@ import Vector2D from "../core/Vector2D.js";
 import Debug from "../debug/Debug.js";
 import ElariaGame from "../core/ElariaGame.js";
 import AudioSource from "../core/AudioSource.js";
+import SceneManager from "../core/SceneManager.js";
 
 export default class Player extends Component {
     static MAX_SPEED = 500;
@@ -12,6 +13,8 @@ export default class Player extends Component {
         this.velocity = new Vector2D(0, 0);
         this.acceleration = 10;
         this.friction = 0.95;
+        this.delay = 0;
+        this.loadSceneIndex = 0;
     }
 
     start() {
@@ -43,6 +46,15 @@ export default class Player extends Component {
 
         if (kd.SPACE.isDown()) {
             this.gameObject.getComponent(AudioSource).play();
+        }
+
+        if (kd.H.isDown()) {
+            this.delay += dt;
+            if (this.delay > 0.5) {
+                SceneManager.loadScene(this.loadSceneIndex);
+            }
+        } else {
+            this.delay = 0;
         }
 
         this.transform.position = this.transform.position.add(new Vector2D(this.velocity.x * dt, this.velocity.y * dt));

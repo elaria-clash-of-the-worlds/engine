@@ -11,13 +11,7 @@ class Transform extends Component {
         this.#parent = null;
         this.localPosition = Vector2D.zero;
         this.rotation = 0;
-    }
-
-    _afterSceneLoaded() {
-        // Set scene container as parent if it's null.
-        if (!this.#parent) {
-            this.setParent(null);
-        }
+        this.setParent(null);
     }
 
     get position() {
@@ -59,11 +53,15 @@ class Transform extends Component {
      * @throws {Error} Throws an error if the parent is not an instance of Transform.
      */
     setParent(newParent) {
+        if (this.#parent != null) {
+            this.#parent._children.splice(this.#parent._children.indexOf(this), 1);
+        }
+
         if (!newParent) {
             const previousPosition = this.position;
             this.#parent = SceneManager.activeScene._container;
+            this.#parent._children.push(this);
             this.position = previousPosition;
-            SceneManager.activeScene._container._children.push(this);
             return;
         }
 
@@ -72,9 +70,6 @@ class Transform extends Component {
         }
 
         if (!newParent._children.includes(this)) {
-            if (this.#parent != null) {
-                this.#parent.children.splice(this.#parent.children.indexOf(this), 1);
-            }
             const previousPosition = this.position;
             this.#parent = newParent;
             this.position = previousPosition;

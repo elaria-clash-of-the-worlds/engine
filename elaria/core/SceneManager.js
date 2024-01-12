@@ -41,6 +41,7 @@ class SceneManager {
         document.removeEventListener('keydown', this.#activeScene?.keyHandler);
 
         this.#activeScene = this.#scenes[sceneIndex].create();
+        this.#scenes[sceneIndex].build();
 
         document.addEventListener('keyup', this.#activeScene.keyHandler);
         document.addEventListener('keydown', this.#activeScene.keyHandler);

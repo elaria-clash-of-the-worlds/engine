@@ -27,6 +27,6 @@ export default class Sprite extends Component {
 
     render() {
         this.#ctx.fillStyle = "green";
-        this.#ctx.drawImage(this.#image, this.transform.position.x, this.transform.position.y, this.#image.width, this.#image.height);
+        this.#ctx.drawImage(this.#image, this.transform.position.x - this.#image.width / 2, this.transform.position.y - this.#image.height / 2, this.#image.width, this.#image.height);
     }
 }

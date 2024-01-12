@@ -1,11 +1,17 @@
 import Transform from "./Transform.js";
+import Vector2D from "./Vector2D.js";
 
 class Scene {
     #name = "";
     constructor(name) {
         this.#name = name;
         this._gameObjects = [];
-        this._container = new Transform();
+        this._container = {
+            parent: null,
+            position: Vector2D.zero,
+            localPosition: Vector2D.zero,
+            _children: [],
+        };
     }
 
     /**

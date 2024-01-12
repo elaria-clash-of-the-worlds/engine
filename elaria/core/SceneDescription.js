@@ -20,7 +20,6 @@ class SceneDescription {
 
     create() {
         this._scene = new Scene(this.#sceneName);
-        this.build();
         return this._scene;
     }
 }

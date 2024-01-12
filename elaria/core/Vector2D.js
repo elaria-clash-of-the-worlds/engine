@@ -4,8 +4,8 @@ class Vector2D {
         this.y = y;
     }
 
-    static zero = new Vector2D(0, 0);
-    static one = new Vector2D(1, 1);
+    static zero = Object.freeze(new Vector2D(0, 0));
+    static one = Object.freeze(new Vector2D(1, 1));
 
     add(v) {
         return new Vector2D(this.x + v.x, this.y + v.y);

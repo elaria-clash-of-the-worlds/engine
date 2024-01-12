@@ -24,7 +24,7 @@ class Debug {
             console.log("No active scene!");
         } else {
             let outputString = "";
-            for (const child of SceneManager.activeScene._container.children) {
+            for (const child of SceneManager.activeScene._container._children) {
                 outputString += Debug.getObjectHierarchy(child);
             }
             return outputString;

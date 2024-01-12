@@ -5,10 +5,13 @@ import ElariaGame from "../core/ElariaGame.js";
 import AudioSource from "../core/AudioSource.js";
 
 export default class Player extends Component {
+    static MAX_SPEED = 500;
 
     constructor() {
         super();
         this.velocity = new Vector2D(0, 0);
+        this.acceleration = 10;
+        this.friction = 0.95;
     }
 
     start() {
@@ -16,36 +19,37 @@ export default class Player extends Component {
     }
 
     update(dt) {
-        const boundingRect = ElariaGame.canvas.getBoundingClientRect();
-        let acceleration = 10;
-
         kd.SHIFT.down(() => {
-            acceleration *= 2;
-        })
+            this.acceleration += this.acceleration * dt;
+        });
 
         kd.W.down(() => {
-            this.velocity.y -= acceleration;
+            if (this.velocity.length <= Player.MAX_SPEED)
+                this.velocity.y -= this.acceleration;
         });
 
         kd.A.down(() => {
-            this.velocity.x -= acceleration;
+            if (this.velocity.length <= Player.MAX_SPEED)
+                this.velocity.x -= this.acceleration;
         });
 
         kd.S.down(() => {
-            this.velocity.y += acceleration;
+            if (this.velocity.length <= Player.MAX_SPEED)
+                this.velocity.y += this.acceleration;
         });
 
         kd.D.down(() => {
-            this.velocity.x += acceleration;
+            if (this.velocity.length <= Player.MAX_SPEED)
+                this.velocity.x += this.acceleration;
         });
 
         kd.SPACE.down(() => {
             this.gameObject.getComponent(AudioSource).play();
-        })
+        });
 
         this.transform.position = this.transform.position.add(new Vector2D(this.velocity.x * dt, this.velocity.y * dt));
 
-        this.velocity.x *= 0.95;
-        this.velocity.y *= 0.95;
+        this.velocity.x *= this.friction;
+        this.velocity.y *= this.friction;
     }
 };

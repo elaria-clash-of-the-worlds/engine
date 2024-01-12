@@ -12,6 +12,8 @@ class ExampleLevel1 extends SceneDescription {
         player.addComponent(Player);
         const sprite = player.addComponent(Sprite);
         sprite.imageSource = "https://mosnapitki.ru/images/cms/thumbs/8c856c34813e8e6eaa248115eef774bea5ffd7a1/sprite_lemon_lime_330ml__535_535_1_100.jpg"
+        sprite.width = 100;
+        sprite.height = 100;
     }
 }
 

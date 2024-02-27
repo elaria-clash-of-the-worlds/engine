@@ -1,7 +1,6 @@
 import Component from "../core/Component.js";
 import Vector2D from "../core/Vector2D.js";
 import Debug from "../debug/Debug.js";
-import ElariaGame from "../core/ElariaGame.js";
 import AudioSource from "../core/AudioSource.js";
 import SceneManager from "../core/SceneManager.js";
 

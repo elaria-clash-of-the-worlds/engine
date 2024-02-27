@@ -1,10 +1,26 @@
 class Component {
-    constructor() {
-        this.gameObject = null;
-        this.transform = null;
+    _gameObject = null;
+    _transform = null;
+
+    /**
+     * The transform component of the gameObject.
+     *
+     * @return {import("./Transform.js").Transform}
+     */
+    get transform() {
+        return this._transform;
     }
 
-    _afterSceneLoaded() {
+    /**
+     * The game object this component is attached to.
+     *
+     * @return {import("./GameObject.js").GameObject}
+     */
+    get gameObject() {
+        return this._gameObject;
+    }
+
+    afterSceneLoaded() {
     }
 
     awake() {

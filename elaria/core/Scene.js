@@ -1,4 +1,3 @@
-import Transform from "./Transform.js";
 import Vector2D from "./Vector2D.js";
 
 class Scene {
@@ -21,6 +20,12 @@ class Scene {
      */
     get name() {
         return this.#name;
+    }
+
+    _afterSceneLoaded() {
+        for (const go of this._gameObjects) {
+            go._afterSceneLoaded();
+        }
     }
 
     _update(dt) {

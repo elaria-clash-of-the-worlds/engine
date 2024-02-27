@@ -10,10 +10,7 @@ export default class CircleMover extends Component {
     }
 
     update(dt) {
-        let x = this.transform.parent.position.x;
-        let y = this.transform.parent.position.y;
-
-        this.transform.position = new Vector2D(x + Math.cos(this.#t * 2 * Math.PI) * this.radius, y + Math.sin(this.#t * 2 * Math.PI) * this.radius);
+        this.transform.localPosition = new Vector2D(Math.cos(this.#t * 2 * Math.PI) * this.radius, Math.sin(this.#t * 2 * Math.PI) * this.radius);
 
         this.#t += this.speed * dt;
 

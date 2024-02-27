@@ -15,6 +15,14 @@ class Vector2D {
         return new Vector2D(this.x - v.x, this.y - v.y);
     }
 
+    setX(x) {
+        return new Vector2D(x, this.y);
+    }
+
+    setY(y) {
+        return new Vector2D(this.x, y);
+    }
+
     get length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }

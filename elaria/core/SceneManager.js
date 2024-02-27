@@ -1,7 +1,6 @@
 import SceneDescription from "./SceneDescription.js";
 
 class SceneManager {
-    static _gameInstance;
     static #scenes = [];
     static #activeScene;
 
@@ -46,10 +45,6 @@ class SceneManager {
 
         document.addEventListener('keyup', this.#activeScene.keyHandler);
         document.addEventListener('keydown', this.#activeScene.keyHandler);
-
-        for (const go of this.#activeScene._gameObjects) {
-            go._afterSceneLoaded();
-        }
     }
 }
 

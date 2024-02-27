@@ -1,4 +1,5 @@
 import SceneManager from "./SceneManager.js";
+import Scene from "./Scene.js";
 
 class ElariaGame {
     static instance;
@@ -9,16 +10,11 @@ class ElariaGame {
     constructor(canvasElement) {
         this.#canvas = canvasElement;
         this.#activeScene = null;
-        SceneManager._gameInstance = this;
 
         ElariaGame.instance = this;
 
         this.#canvas.width = window.innerWidth;
         this.#canvas.height = window.innerHeight;
-
-        // const {width, height} = canvasElement.getBoundingClientRect();
-        // console.log(width);
-        // console.log(height);
     }
 
     #startGameLoop() {
@@ -45,7 +41,9 @@ class ElariaGame {
         if (this.#activeScene !== SceneManager.activeScene) {
             if (this.#activeScene != null)
                 this.#activeScene._onDestroy();
+
             this.#activeScene = SceneManager.activeScene;
+            this.#activeScene._afterSceneLoaded();
         }
     }
 
@@ -61,7 +59,11 @@ class ElariaGame {
     }
 
     start(sceneIndex) {
-        SceneManager.loadScene(sceneIndex);
+        if (sceneIndex) {
+            SceneManager.loadScene(sceneIndex);
+        } else {
+            SceneManager.loadScene(0);
+        }
         this.#startGameLoop();
     }
 }

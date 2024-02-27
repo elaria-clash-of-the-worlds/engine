@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="style.css">
     <script src="./elaria/thirdparty/keydrown.js"></script>
     <script type="module">
-        import ElariaGame from "./elaria/core/ElariaGame.js";
+        import {ElariaGame, SceneManager} from "./elaria/core/ElariaCore.js";
         import ExampleLevel1 from "./elaria/examples/ExampleLevel1.js";
         import ExampleLevel2 from "./elaria/examples/ExampleLevel2.js";
-        import SceneManager from "./elaria/core/SceneManager.js";
 
         const game = new ElariaGame(document.getElementById("canvas"));
         SceneManager.registerScene(new ExampleLevel1());
         SceneManager.registerScene(new ExampleLevel2());
-        game.start(0);
+
+        game.start();
     </script>
 </head>
 

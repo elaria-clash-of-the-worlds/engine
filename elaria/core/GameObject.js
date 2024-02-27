@@ -1,5 +1,6 @@
 import Transform from "./Transform.js";
 import Component from "./Component.js";
+import SceneManager from "./SceneManager.js";
 
 class GameObject {
     #activeSelf = true;
@@ -8,11 +9,16 @@ class GameObject {
     #onEnableCalled = false;
     #onDisableCalled = false;
     #transform;
-    
-    constructor() {
-        this.components = [];
+
+    constructor(name) {
         this.name = "GameObject";
+        if (name)
+            this.name = name;
+
+        this.components = [];
         this.#transform = this.addComponent(Transform);
+
+        SceneManager.activeScene._gameObjects.push(this);
     }
 
     /**
@@ -34,7 +40,7 @@ class GameObject {
 
     _afterSceneLoaded() {
         for (const component of this.components) {
-            component._afterSceneLoaded();
+            component.afterSceneLoaded();
         }
     }
 
@@ -84,6 +90,9 @@ class GameObject {
 
     _onDestroy() {
         for (const component of this.components) {
+            if (this.activeSelf) {
+                component.onDisable();
+            }
             component.onDestroy();
         }
     }
@@ -101,10 +110,8 @@ class GameObject {
 
         if (value) {
             this.#onEnableCalled = false;
-            // Call OnEnable on all components and hierarchy children
         } else {
             this.#onDisableCalled = false;
-            // Call OnDisable on all components and hierarchy children
         }
     }
 
@@ -124,8 +131,8 @@ class GameObject {
         }
 
         const newComponent = new component();
-        newComponent.gameObject = this;
-        newComponent.transform = this.transform;
+        newComponent._gameObject = this;
+        newComponent._transform = this.transform;
 
         this.components.push(newComponent);
         return newComponent;
@@ -158,6 +165,14 @@ class GameObject {
                 return;
             }
         }
+    }
+
+    static instantiate() {
+
+    }
+
+    static dontDestroyOnLoad(gameObject) {
+
     }
 
     /**

@@ -14,20 +14,20 @@ class ExampleLevel1 extends SceneDescription {
         playerComponent.loadSceneIndex = 1;
 
         const sprite = player.addComponent(Sprite);
-        sprite.imageSource = "https://mosnapitki.ru/images/cms/thumbs/8c856c34813e8e6eaa248115eef774bea5ffd7a1/sprite_lemon_lime_330ml__535_535_1_100.jpg"
+        sprite.imageSource = "/elaria/examples/assets/sprite.png";
         sprite.width = 128;
         sprite.height = 128;
 
         const audioSource = player.addComponent(AudioSource);
-        audioSource.source = '/elaria/examples/assets/bubbles.wav';
+        audioSource.source = "/elaria/examples/assets/bubbles.wav";
 
         const childObject = new GameObject("Child object");
         childObject.transform.localPosition = new Vector2D(100, 0);
         childObject.transform.setParent(player.transform);
-        childObject.addComponent(CircleMover)
+        childObject.addComponent(CircleMover);
 
         const childSprite = childObject.addComponent(Sprite);
-        childSprite.imageSource = "https://mosnapitki.ru/images/cms/thumbs/8c856c34813e8e6eaa248115eef774bea5ffd7a1/sprite_lemon_lime_330ml__535_535_1_100.jpg"
+        childSprite.imageSource = "/elaria/examples/assets/sprite.png";
         childSprite.width = 50;
         childSprite.height = 50;
     }

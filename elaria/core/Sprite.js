@@ -13,8 +13,16 @@ export default class Sprite extends Component {
         return this.#image;
     }
 
+    get width() {
+        return this.#image.width;
+    }
+
     set width(newWidth) {
         this.#image.width = newWidth;
+    }
+
+    get height() {
+        return this.#image.height;
     }
 
     set height(newHeight) {

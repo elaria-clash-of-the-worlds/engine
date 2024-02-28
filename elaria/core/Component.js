@@ -20,9 +20,6 @@ class Component {
         return this._gameObject;
     }
 
-    afterSceneLoaded() {
-    }
-
     awake() {
     }
 

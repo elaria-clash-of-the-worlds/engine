@@ -37,14 +37,8 @@ class SceneManager {
             throw new Error("Invalid scene index");
         }
 
-        document.removeEventListener('keyup', this.#activeScene?.keyHandler);
-        document.removeEventListener('keydown', this.#activeScene?.keyHandler);
-
         this.#activeScene = this.#scenes[sceneIndex].create();
         this.#scenes[sceneIndex].build();
-
-        document.addEventListener('keyup', this.#activeScene.keyHandler);
-        document.addEventListener('keydown', this.#activeScene.keyHandler);
     }
 }
 

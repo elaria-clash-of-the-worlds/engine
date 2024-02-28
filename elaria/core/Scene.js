@@ -2,9 +2,10 @@ import Vector2D from "./Vector2D.js";
 
 class Scene {
     #name = "";
+    #gameObjects = [];
+
     constructor(name) {
         this.#name = name;
-        this._gameObjects = [];
         this._container = {
             parent: null,
             position: Vector2D.zero,
@@ -22,27 +23,32 @@ class Scene {
         return this.#name;
     }
 
-    _afterSceneLoaded() {
-        for (const go of this._gameObjects) {
-            go._afterSceneLoaded();
+    addGameObject(gameObject) {
+        this.#gameObjects.push(gameObject);
+    }
+
+    removeGameObject(gameObject) {
+        const index = this.#gameObjects.indexOf(gameObject);
+        if (index > -1) {
+            this.#gameObjects.splice(index, 1);
         }
     }
 
-    _update(dt) {
-        for (const gameObject of this._gameObjects) {
+    update(dt) {
+        for (const gameObject of this.#gameObjects) {
             gameObject._update(dt);
         }
     }
 
-    _render() {
-        for (const gameObject of this._gameObjects) {
+    render() {
+        for (const gameObject of this.#gameObjects) {
             gameObject._render();
         }
     }
 
-    _onDestroy() {
-        for (const gameObject of this._gameObjects) {
-            gameObject._onDestroy();
+    destroy() {
+        for (const gameObject of this.#gameObjects) {
+            gameObject._destroy();
         }
     }
 }

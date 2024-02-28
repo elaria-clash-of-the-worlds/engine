@@ -67,7 +67,7 @@ class Transform extends Component {
     }
 
     set localPositionX(value) {
-        this.#localPosition = this.#localPosition.setX(value)
+        this.#localPosition = this.#localPosition.setX(value);
     }
 
     get localPositionY() {
@@ -75,7 +75,7 @@ class Transform extends Component {
     }
 
     set localPositionY(value) {
-        this.#localPosition = this.#localPosition.setY(value)
+        this.#localPosition = this.#localPosition.setY(value);
     }
 
     /**
@@ -162,6 +162,16 @@ class Transform extends Component {
             throw new Error(`Invalid child index - ${childIndex}! The object has ${this._children.length} children.`);
         }
         return this._children[childIndex];
+    }
+
+    onDestroy() {
+        let parentChildren;
+        if (this.#parent === null) {
+            parentChildren = SceneManager.activeScene._container._children;
+        } else {
+            parentChildren = this.#parent._children;
+        }
+        parentChildren.splice(parentChildren.indexOf(this), 1);
     }
 }
 

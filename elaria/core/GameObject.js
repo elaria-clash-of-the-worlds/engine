@@ -3,11 +3,13 @@ import Component from "./Component.js";
 import SceneManager from "./SceneManager.js";
 
 class GameObject {
-    #activeSelf = true;
     #awakeCalled = false;
     #startCalled = false;
     #onEnableCalled = false;
     #onDisableCalled = false;
+
+    #activeSelf = true;
+    #isDestroyed = false;
     #transform;
 
     constructor(name) {
@@ -18,7 +20,7 @@ class GameObject {
         this.components = [];
         this.#transform = this.addComponent(Transform);
 
-        SceneManager.activeScene._gameObjects.push(this);
+        SceneManager.activeScene.addGameObject(this);
     }
 
     /**
@@ -38,10 +40,8 @@ class GameObject {
         return this.#activeSelf;
     }
 
-    _afterSceneLoaded() {
-        for (const component of this.components) {
-            component.afterSceneLoaded();
-        }
+    get isDestroyed() {
+        return this.#isDestroyed;
     }
 
     _update(dt) {
@@ -88,13 +88,17 @@ class GameObject {
         }
     }
 
-    _onDestroy() {
+    _destroy() {
+        for (const child of this.transform.children) {
+            GameObject.destroy(child.gameObject);
+        }
         for (const component of this.components) {
             if (this.activeSelf) {
                 component.onDisable();
             }
             component.onDestroy();
         }
+        this.#isDestroyed = true;
     }
 
     /**
@@ -169,6 +173,11 @@ class GameObject {
 
     static instantiate() {
 
+    }
+
+    static destroy(gameObject) {
+        SceneManager.activeScene.removeGameObject(gameObject);
+        gameObject._destroy();
     }
 
     static dontDestroyOnLoad(gameObject) {

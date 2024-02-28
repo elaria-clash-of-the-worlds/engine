@@ -1,20 +1,18 @@
 import SceneManager from "./SceneManager.js";
-import Scene from "./Scene.js";
 
 class ElariaGame {
     static instance;
-    static deltaTime = 0;
+    #deltaTime = 0;
     #activeScene;
     #canvas;
 
     constructor(canvasElement) {
-        this.#canvas = canvasElement;
         this.#activeScene = null;
-
-        ElariaGame.instance = this;
-
+        this.#canvas = canvasElement;
         this.#canvas.width = window.innerWidth;
         this.#canvas.height = window.innerHeight;
+
+        ElariaGame.instance = this;
     }
 
     #startGameLoop() {
@@ -23,8 +21,9 @@ class ElariaGame {
         const gameLoop = (now) => {
             this.#update();
             this.#render();
-            ElariaGame.deltaTime = (now - lastTime) / 1000.0;
+            this.#deltaTime = (now - lastTime) / 1000.0;
             lastTime = now;
+            // eslint-disable-next-line no-undef
             kd.tick();
 
             window.requestAnimationFrame(gameLoop);
@@ -35,22 +34,21 @@ class ElariaGame {
 
     #update() {
         if (this.#activeScene) {
-            this.#activeScene._update(ElariaGame.deltaTime);
+            this.#activeScene.update(this.#deltaTime);
         }
 
         if (this.#activeScene !== SceneManager.activeScene) {
             if (this.#activeScene != null)
-                this.#activeScene._onDestroy();
+                this.#activeScene.destroy();
 
             this.#activeScene = SceneManager.activeScene;
-            this.#activeScene._afterSceneLoaded();
         }
     }
 
     #render() {
         if (this.#activeScene) {
             ElariaGame.canvas.getContext("2d").clearRect(0, 0, ElariaGame.canvas.width, ElariaGame.canvas.height);
-            this.#activeScene._render();
+            this.#activeScene.render();
         }
     }
 

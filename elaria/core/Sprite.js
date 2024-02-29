@@ -1,8 +1,6 @@
-import Component from "./Component.js";
-import ElariaGame from "./ElariaGame.js";
+import Graphic from "./Graphic.js";
 
-export default class Sprite extends Component {
-    #ctx;
+export default class Sprite extends Graphic {
     #image = new Image();
 
     set imageSource(imageSource) {
@@ -10,7 +8,7 @@ export default class Sprite extends Component {
     }
 
     get image() {
-        return this.#image;
+        return this.#image.src;
     }
 
     get width() {
@@ -29,12 +27,7 @@ export default class Sprite extends Component {
         this.#image.height = newHeight;
     }
 
-    awake() {
-        this.#ctx = ElariaGame.canvas.getContext("2d");
-    }
-
     render() {
-        this.#ctx.fillStyle = "green";
-        this.#ctx.drawImage(this.#image, this.transform.position.x - this.#image.width / 2, this.transform.position.y - this.#image.height / 2, this.#image.width, this.#image.height);
+        this.context.drawImage(this.#image,  -this.#image.width / 2, -this.#image.height / 2, this.#image.width, this.#image.height);
     }
 }

@@ -177,6 +177,11 @@ class Tween {
     static localPositionY(transform, from, to, duration) {
         return Tween.create(from, to, duration).bindTo((value) => transform.localPositionY = value);
     }
+
+    static localRotation(transform, from, to, duration)
+    {
+        return Tween.create(from, to, duration).bindTo((value) => transform.localRotation = value);
+    }
 }
 
 class TweensContainer extends Component {

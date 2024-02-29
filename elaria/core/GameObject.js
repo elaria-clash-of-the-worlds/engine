@@ -1,6 +1,7 @@
 import Transform from "./Transform.js";
 import Component from "./Component.js";
 import SceneManager from "./SceneManager.js";
+import ElariaGame from "./ElariaGame.js";
 
 class GameObject {
     #awakeCalled = false;
@@ -82,10 +83,18 @@ class GameObject {
         if (!this.#startCalled || !this.activeSelf) {
             return;
         }
-
+        const context = ElariaGame.canvas.getContext("2d");
+        context.save();
+        context.translate(this.transform.localPosition.x, this.transform.localPosition.y);
+        context.rotate(this.transform.localRotation);
+        context.scale(this.transform.localScale.x, this.transform.localScale.y);
         for (const component of this.components) {
             component.render();
         }
+        for (const transform of this.transform.children) {
+            transform.gameObject._render();
+        }
+        context.restore();
     }
 
     _destroy() {

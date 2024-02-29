@@ -11,12 +11,13 @@ class Transform extends Component {
         this._children = [];
         this.#parent = null;
         this.#localPosition = Vector2D.zero;
-        this.rotation = 0;
+        this.localRotation = 0;
+        this.localScale = Vector2D.one;
         this.setParent(null);
     }
 
     /**
-     * Get the local position of the object.
+     * Get the world position of the object.
      *
      * @return {Readonly<Vector2D>} description of return value
      */
@@ -52,12 +53,16 @@ class Transform extends Component {
     /**
      * Get the local position of the object.
      *
-     * @return {Readonly<Vector2D>} description of return value
+     * @return {Vector2D} description of return value
      */
     get localPosition() {
         return this.#localPosition;
     }
 
+    /**
+     * Set the local position of the object.
+     * @param {Vector2D} newPosition - The new local position to set.
+     */
     set localPosition(newPosition) {
         this.#localPosition = newPosition;
     }
@@ -76,6 +81,17 @@ class Transform extends Component {
 
     set localPositionY(value) {
         this.#localPosition = this.#localPosition.setY(value);
+    }
+
+    /**
+     * Get the world rotation of the object.
+     * @returns {number} - The world rotation of the object.
+     */
+    get rotation() {
+        if (this.parent) {
+            return this.parent.rotation + this.localRotation;
+        }
+        return this.localRotation;
     }
 
     /**

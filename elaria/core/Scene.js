@@ -9,6 +9,8 @@ class Scene {
         this._container = {
             parent: null,
             position: Vector2D.zero,
+            rotation: 0,
+            localRotation: 0,
             localPosition: Vector2D.zero,
             _children: [],
         };
@@ -41,8 +43,8 @@ class Scene {
     }
 
     render() {
-        for (const gameObject of this.#gameObjects) {
-            gameObject._render();
+        for (const transform of this._container._children) {
+            transform.gameObject._render();
         }
     }
 

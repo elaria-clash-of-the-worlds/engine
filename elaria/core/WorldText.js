@@ -1,9 +1,6 @@
-import Component from "./Component.js";
-import ElariaGame from "./ElariaGame.js";
+import Graphic from "./Graphic.js";
 
-class WorldText extends Component {
-    #ctx;
-
+class WorldText extends Graphic {
     constructor() {
         super();
         this.text = "";
@@ -11,15 +8,11 @@ class WorldText extends Component {
         this.fontFamily = "serif";
     }
 
-    awake() {
-        this.#ctx = ElariaGame.canvas.getContext("2d");
+    render() {
+        this.context.font = `${this.fontSize}px ${this.fontFamily}`;
+        this.context.fillText(this.text, 0, 0);
     }
 
-    render() {
-        this.#ctx.fillStyle = "green";
-        this.#ctx.font = `${this.fontSize}px ${this.fontFamily}`;
-        this.#ctx.fillText(this.text, this.transform.position.x, this.transform.position.y);
-    }
 }
 
 export default WorldText;

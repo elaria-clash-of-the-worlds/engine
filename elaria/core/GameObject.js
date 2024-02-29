@@ -176,6 +176,10 @@ class GameObject {
     }
 
     static destroy(gameObject) {
+        if (!(gameObject instanceof GameObject))
+        {
+            throw new Error("Only gameObjects can be destroyed!");
+        }
         SceneManager.activeScene.removeGameObject(gameObject);
         gameObject._destroy();
     }

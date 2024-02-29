@@ -10,6 +10,7 @@ class Tween {
     #bindProperty;
     #loopCount = 0;
     #loopType = LoopType.restart;
+    #onStartCallback;
     #onCompleteCallback;
     #easeFunction = Ease.linear;
 
@@ -17,6 +18,7 @@ class Tween {
     #elapsedTime = 0;
     #loopsLeft;
     #isRewind = false;
+    #isStarted = false;
 
     static #tweensContainer;
 
@@ -99,6 +101,11 @@ class Tween {
         return this;
     }
 
+    onStart(callback) {
+        this.#onStartCallback = callback;
+        return this;
+    }
+
     onComplete(callback) {
         this.#onCompleteCallback = callback;
         return this;
@@ -107,6 +114,15 @@ class Tween {
     update(dt) {
         this.#elapsedTime += dt;
         if (this.#elapsedTime >= this.#delay) {
+            if (!this.#isStarted)
+            {
+                this.#isStarted = true;
+                if (this.#onStartCallback)
+                {
+                    this.#onStartCallback();
+                }
+            }
+
             this.#t = Math.min(Math.max((this.#elapsedTime - this.#delay) / this.#duration, 0), 1);
             this.#value = this.#easeFunction(this.#isRewind ? 1 - this.#t : this.#t) * (this.#to - this.#from) + this.#from;
 
@@ -119,29 +135,22 @@ class Tween {
                         this.#loopsLeft -= 1;
                     }
 
-                    if (this.#loopType === LoopType.restart)
-                    {
+                    if (this.#loopType === LoopType.restart) {
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
-                    }
-                    else if (this.#loopType === LoopType.pingPong)
-                    {
+                    } else if (this.#loopType === LoopType.pingPong) {
                         const temp = this.#from;
                         this.#from = this.#to;
                         this.#to = temp;
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
-                    }
-                    else if (this.#loopType === LoopType.incremental)
-                    {
+                    } else if (this.#loopType === LoopType.incremental) {
                         const delta = this.#to - this.#from;
                         this.#from = this.#to;
                         this.#to += delta;
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
-                    }
-                    else if (this.#loopType === LoopType.rewind)
-                    {
+                    } else if (this.#loopType === LoopType.rewind) {
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
                         this.#isRewind = !this.#isRewind;
@@ -199,48 +208,48 @@ const LoopType = Object.freeze({
     rewind: 3
 });
 
-class Ease {
-    static linear = (t) => t;
-    static inSine = (t) => 1 - Math.cos((t * Math.PI) / 2);
-    static outSine = (t) => Math.sin((t * Math.PI) / 2);
-    static inOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
-    static inQuad = (t) => t * t;
-    static outQuad = (t) => t * (2 - t);
-    static inOutQuad = (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-    static inCubic = (t) => t * t * t;
-    static outCubic = (t) => 1 - Math.pow(1 - t, 3);
-    static inOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    static inQuart = (t) => t * t * t * t;
-    static outQuart = (t) => 1 - Math.pow(1 - t, 4);
-    static inOutQuart = (t) => t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2;
-    static inQuint = (t) => t * t * t * t * t;
-    static outQuint = (t) => 1 - Math.pow(1 - t, 5);
-    static inOutQuint = (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
-    static inExpo = (t) => Math.pow(2, 10 * (t - 1));
-    static outExpo = (t) => 1 - Math.pow(2, -10 * t);
-    static inOutExpo = (t) => {
+const Ease = Object.freeze({
+    linear: (t) => t,
+    inSine: (t) => 1 - Math.cos((t * Math.PI) / 2),
+    outSine: (t) => Math.sin((t * Math.PI) / 2),
+    inOutSine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
+    inQuad: (t) => t * t,
+    outQuad: (t) => t * (2 - t),
+    inOutQuad: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+    inCubic: (t) => t * t * t,
+    outCubic: (t) => 1 - Math.pow(1 - t, 3),
+    inOutCubic: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+    inQuart: (t) => t * t * t * t,
+    outQuart: (t) => 1 - Math.pow(1 - t, 4),
+    inOutQuart: (t) => t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
+    inQuint: (t) => t * t * t * t * t,
+    outQuint: (t) => 1 - Math.pow(1 - t, 5),
+    inOutQuint: (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2,
+    inExpo: (t) => Math.pow(2, 10 * (t - 1)),
+    outExpo: (t) => 1 - Math.pow(2, -10 * t),
+    inOutExpo: (t) => {
         return t === 0 || t === 1
             ? t
             : t < 0.5
                 ? Math.pow(2, 20 * t - 10) / 2
                 : (2 - Math.pow(2, -20 * t + 10)) / 2;
-    };
-    static inCirc = (t) => 1 - Math.sqrt(1 - t * t);
-    static outCirc = (t) => Math.sqrt(1 - Math.pow(t - 1, 2));
-    static inOutCirc = (t) => {
+    },
+    inCirc: (t) => 1 - Math.sqrt(1 - t * t),
+    outCirc: (t) => Math.sqrt(1 - Math.pow(t - 1, 2)),
+    inOutCirc: (t) => {
         return t < 0.5
             ? (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2
             : (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2;
-    };
-    static inBack = (t) => 2.70158 * t * t * t - 1.70158 * t * t;
-    static outBack = (t) => 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2);
-    static inOutBack = (t) => {
+    },
+    inBack: (t) => 2.70158 * t * t * t - 1.70158 * t * t,
+    outBack: (t) => 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2),
+    inOutBack: (t) => {
         return t < 0.5
             ? (Math.pow(2 * t, 2) * ((2.5949095 + 1) * 2 * t - 2.5949095)) / 2
             : (Math.pow(2 * t - 2, 2) * ((2.5949095 + 1) * (t * 2 - 2) + 2.5949095) + 2) / 2;
-    };
-    static inBounce = (t) => 1 - Ease.outBounce(1 - t);
-    static outBounce = (t) => {
+    },
+    inBounce: (t) => 1 - Ease.outBounce(1 - t),
+    outBounce: (t) => {
         if (t < 1 / 2.75) {
             return 7.5625 * t * t;
         } else if (t < 2 / 2.75) {
@@ -250,14 +259,14 @@ class Ease {
         } else {
             return 7.5625 * (t -= 2.625 / 2.75) * t + 0.984375;
         }
-    };
-    static inOutBounce = (t) => t < 0.5 ? (1 - Ease.outBounce(1 - 2 * t)) / 2 : (1 + Ease.outBounce(2 * t - 1)) / 2;
-    static inElastic = (t) => 1 - Ease.outElastic(1 - t);
-    static outElastic = (t) => {
+    },
+    inOutBounce: (t) => t < 0.5 ? (1 - Ease.outBounce(1 - 2 * t)) / 2 : (1 + Ease.outBounce(2 * t - 1)) / 2,
+    inElastic: (t) => 1 - Ease.outElastic(1 - t),
+    outElastic: (t) => {
         const c4 = (2 * Math.PI) / 3;
         return t === 0 ? 0 : t === 1 ? 1 : -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * c4);
-    };
-    static inOutElastic = (t) => t < 0.5 ? (1 - Ease.outElastic(1 - 2 * t)) / 2 : (1 + Ease.outElastic(2 * t - 1)) / 2;
-}
+    },
+    inOutElastic: (t) => t < 0.5 ? (1 - Ease.outElastic(1 - 2 * t)) / 2 : (1 + Ease.outElastic(2 * t - 1)) / 2
+});
 
 export {Tween, Ease, LoopType};

@@ -12,6 +12,7 @@ class Scene {
             rotation: 0,
             localRotation: 0,
             localPosition: Vector2D.zero,
+            localScale: Vector2D.one,
             _children: [],
         };
     }

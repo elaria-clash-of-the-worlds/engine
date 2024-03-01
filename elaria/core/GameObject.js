@@ -60,6 +60,13 @@ class GameObject {
             }
         }
 
+        if (!this.activeSelf && !this.#onDisableCalled) {
+            this.#onDisableCalled = true;
+            for (const component of this.components) {
+                component.onDisable();
+            }
+        }
+
         if (!this.#startCalled) {
             this.#startCalled = true;
             for (const component of this.components) {
@@ -70,13 +77,6 @@ class GameObject {
                 component.update(dt);
             }
         }
-
-        if (!this.activeSelf && !this.#onDisableCalled) {
-            this.#onDisableCalled = true;
-            for (const component of this.components) {
-                component.onDisable();
-            }
-        }
     }
 
     _render() {
@@ -85,7 +85,13 @@ class GameObject {
         }
         const context = ElariaGame.canvas.getContext("2d");
         context.save();
-        context.translate(this.transform.localPosition.x, this.transform.localPosition.y);
+        let xFactor = 1;
+        let yFactor = 1;
+        if (this.transform.parent != null) {
+            xFactor = this.transform.parent.localScale.x;
+            yFactor = this.transform.parent.localScale.y;
+        }
+        context.translate(this.transform.localPosition.x / xFactor, this.transform.localPosition.y / yFactor);
         context.rotate(this.transform.localRotation);
         context.scale(this.transform.localScale.x, this.transform.localScale.y);
         for (const component of this.components) {
@@ -195,12 +201,6 @@ class GameObject {
 
     static dontDestroyOnLoad(gameObject) {
 
-    }
-
-    /**
-     * The method is invoked when the game object is clicked.
-     */
-    onClick() {
     }
 }
 

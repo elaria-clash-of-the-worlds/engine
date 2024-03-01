@@ -9,8 +9,10 @@ class WorldText extends Graphic {
     }
 
     render() {
+        this.context.save();
         this.context.font = `${this.fontSize}px ${this.fontFamily}`;
         this.context.fillText(this.text, 0, 0);
+        this.context.restore();
     }
 
 }

@@ -20,6 +20,15 @@ class Component {
         return this._gameObject;
     }
 
+    /**
+     * Creates a new instance of Component.
+     *
+     * @return {Component}
+     */
+    clone() {
+        return new this.constructor();
+    }
+
     awake() {
     }
 

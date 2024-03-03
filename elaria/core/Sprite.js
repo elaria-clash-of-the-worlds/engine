@@ -3,12 +3,12 @@ import Graphic from "./Graphic.js";
 export default class Sprite extends Graphic {
     #image = new Image();
 
-    set imageSource(imageSource) {
-        this.#image.src = imageSource;
+    get imageSource() {
+        return this.#image.src;
     }
 
-    get image() {
-        return this.#image.src;
+    set imageSource(imageSource) {
+        this.#image.src = imageSource;
     }
 
     get width() {
@@ -27,7 +27,15 @@ export default class Sprite extends Graphic {
         this.#image.height = newHeight;
     }
 
+    clone() {
+        const clonedSprite = super.clone();
+        clonedSprite.imageSource = this.imageSource;
+        clonedSprite.width = this.width;
+        clonedSprite.height = this.height;
+        return clonedSprite;
+    }
+
     render() {
-        this.context.drawImage(this.#image,  -this.#image.width / 2, -this.#image.height / 2, this.#image.width, this.#image.height);
+        this.context.drawImage(this.#image,  -this.width / 2, -this.height / 2, this.width, this.height);
     }
 }

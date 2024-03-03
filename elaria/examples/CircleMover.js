@@ -18,4 +18,11 @@ export default class CircleMover extends Component {
             this.#t = 0.0;
         }
     }
+
+    clone() {
+        const cloneCircleMover = super.clone();
+        cloneCircleMover.radius = this.radius;
+        cloneCircleMover.speed = this.speed;
+        return cloneCircleMover;
+    }
 }

@@ -14,9 +14,7 @@ class GameObject {
     #transform;
 
     constructor(name) {
-        this.name = "GameObject";
-        if (name)
-            this.name = name;
+        this.name = name || "GameObject";
 
         this.components = [];
         this.#transform = this.addComponent(Transform);
@@ -138,20 +136,36 @@ class GameObject {
      * Adds a component to the GameObject.
      *
      * @param component - the component to be added.
+     * @param params - component parameters.
      * @return {Component} - The added component.
      */
-    addComponent(component) {
-        if (!(component.prototype instanceof Component)) {
-            throw new Error("The added component must be an instance of Component.");
+    addComponent(component, params = {}) {
+        let newComponent;
+        if (!(component instanceof Component))
+        {
+            if (!(component.prototype instanceof Component)) {
+                throw new Error("The added component must be an instance of Component.");
+            }
+
+            if (component.prototype instanceof Transform) {
+                throw new Error("Transform always exists in a GameObject, you don't need to add it by yourself!");
+            }
+
+            newComponent = new component();
+        } else {
+            newComponent = component;
         }
 
-        if (component.prototype instanceof Transform) {
-            throw new Error("Transform always exists in a GameObject, you don't need to add it by yourself!");
-        }
-
-        const newComponent = new component();
         newComponent._gameObject = this;
         newComponent._transform = this.transform;
+
+        for (const pk of Object.keys(params)) {
+            if (pk in newComponent) {
+                newComponent[pk] = params[pk];
+            } else {
+                console.log("Parameter <" + pk + "> is not a valid property of " + component.name + " component.");
+            }
+        }
 
         this.components.push(newComponent);
         return newComponent;
@@ -160,8 +174,8 @@ class GameObject {
     /**
      * Retrieves a component of the specified type from the list of components.
      *
-     * @param {Component} component - The type of component to retrieve.
-     * @return {Component} The component of the specified type, or undefined if not found.
+     * @param {Object} component - The type of component to retrieve.
+     * @return {Object} The component of the specified type, or undefined if not found.
      */
     getComponent(component) {
         return this.components.find(c => c instanceof component);
@@ -186,13 +200,64 @@ class GameObject {
         }
     }
 
-    static instantiate() {
+    toString() {
+        let result = `GameObject: ${this.name}\n`;
+        result += `Active: ${this.activeSelf}\n`;
+        result += `Destroyed: ${this.isDestroyed}\n`;
 
+        // Display components
+        result += "Components:\n";
+        for (const component of this.components) {
+            result += `- ${component.constructor.name}\n`;
+        }
+
+        // Display children
+        result += "Children:";
+        for (const childTransform of this.transform.children) {
+            const childGameObject = childTransform.gameObject;
+            result += `\n- ${childGameObject.name}`;
+        }
+        if (this.transform.children.length === 0) {
+            result += " None\n";
+        }
+
+        return result;
+    }
+
+    static instantiate(original, parent = null) {
+        if (!(original instanceof GameObject)) {
+            throw new Error("Only GameObjects can be instantiated!");
+        }
+
+        const cloneObject = new GameObject(original.name + "_clone");
+
+        for (const originalComponent of original.components) {
+            if (originalComponent instanceof Transform) {
+                continue;
+            }
+
+            cloneObject.addComponent(originalComponent.clone());
+        }
+
+        cloneObject.transform.position = original.transform.position;
+        cloneObject.transform.rotation = original.transform.rotation;
+        cloneObject.transform.localScale = original.transform.localScale;
+
+        // Set the parent for the clone transform
+        if (parent instanceof Transform) {
+            cloneObject.transform.parent = parent;
+        }
+
+        // Recursively instantiate children
+        for (const child of original.transform.children) {
+            GameObject.instantiate(child.gameObject, cloneObject.transform);
+        }
+
+        return cloneObject;
     }
 
     static destroy(gameObject) {
-        if (!(gameObject instanceof GameObject))
-        {
+        if (!(gameObject instanceof GameObject)) {
             throw new Error("Only gameObjects can be destroyed!");
         }
         SceneManager.activeScene.removeGameObject(gameObject);

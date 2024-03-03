@@ -62,4 +62,4 @@ export default class Player extends Component {
         this.velocity.x *= this.friction;
         this.velocity.y *= this.friction;
     }
-};
+}

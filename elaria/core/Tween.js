@@ -162,6 +162,10 @@ class Tween {
         }
     }
 
+    static delay(duration) {
+        return Tween.create(0, 1, duration);
+    }
+
     static positionX(transform, from, to, duration) {
         return Tween.create(from, to, duration).bindTo((value) => transform.positionX = value);
     }

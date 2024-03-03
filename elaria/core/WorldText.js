@@ -15,6 +15,13 @@ class WorldText extends Graphic {
         this.context.restore();
     }
 
+    clone() {
+        const cloneWorldText = super.clone();
+        cloneWorldText.text = this.text;
+        cloneWorldText.fontSize = this.fontSize;
+        cloneWorldText.fontFamily = this.fontFamily;
+        return cloneWorldText;
+    }
 }
 
 export default WorldText;

@@ -81,23 +81,28 @@ class GameObject {
         if (!this.#startCalled || !this.activeSelf) {
             return;
         }
+
         const context = ElariaGame.canvas.getContext("2d");
         context.save();
-        let xFactor = 1;
-        let yFactor = 1;
+
+        let xScaleFactor = 1;
+        let yScaleFactor = 1;
         if (this.transform.parent != null) {
-            xFactor = this.transform.parent.localScale.x;
-            yFactor = this.transform.parent.localScale.y;
+            xScaleFactor = this.transform.parent.localScale.x;
+            yScaleFactor = this.transform.parent.localScale.y;
         }
-        context.translate(this.transform.localPosition.x / xFactor, this.transform.localPosition.y / yFactor);
-        context.rotate(this.transform.localRotation);
+
+        context.translate(this.transform.localPosition.x / xScaleFactor, this.transform.localPosition.y / yScaleFactor);
+        context.rotate(this.transform.localRotation * (Math.PI / 180.0));
         context.scale(this.transform.localScale.x, this.transform.localScale.y);
+
         for (const component of this.components) {
             component.render();
         }
         for (const transform of this.transform.children) {
             transform.gameObject._render();
         }
+
         context.restore();
     }
 

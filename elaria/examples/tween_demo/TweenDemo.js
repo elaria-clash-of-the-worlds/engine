@@ -115,12 +115,9 @@ class TweenDemoComponent extends Component {
             easingObject.transform.setParent(demoObject.transform);
 
             const sprite = easingObject.addComponent(Sprite);
-            if (loopType === LoopType.incremental)
-            {
+            if (loopType === LoopType.incremental) {
                 sprite.imageSource = "/elaria/examples/assets/coka.png";
-            }
-            else
-            {
+            } else {
                 sprite.imageSource = "/elaria/examples/assets/sprite.png";
             }
             sprite.width = 48;
@@ -169,6 +166,8 @@ class TweenDemoComponent extends Component {
             this.parentContainer.transform.positionY = this.parentContainer.transform.positionY - 500 * dt;
         }
     }
-}0;
+}
+
+0;
 
 export default TweenDemo;

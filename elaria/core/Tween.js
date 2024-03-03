@@ -1,51 +1,65 @@
 import Component from "./Component.js";
 import GameObject from "./GameObject.js";
+import {Vector2D} from "./ElariaCore.js";
 
 class Tween {
-    #from;
-    #to;
+    #startValue;
+    #endValue;
     #t = 0;
     #duration = 0;
     #delay = 0;
-    #bindProperty;
     #loopCount = 0;
     #loopType = LoopType.restart;
+    #lerpFunction = Tween.lerpNumberFunction;
+    #easeFunction = Ease.linear;
+    #bindProperty;
     #onStartCallback;
     #onCompleteCallback;
-    #easeFunction = Ease.linear;
 
-    #value;
+    #currentValue;
     #elapsedTime = 0;
     #loopsLeft;
     #isRewind = false;
     #isStarted = false;
+    #isPlaying = false;
 
     static #tweensContainer;
 
     /**
      * Creates a new tween which can be used to interpolate a value from a one value to another.
      *
-     * @param {number} from - the starting value
-     * @param {number} to - the ending value
+     * @param {number | Vector2D} startValue - the starting value
+     * @param {number | Vector2D} endValue - the ending value
      * @param {number} duration - the duration of the interpolation
      * @return {Tween}
      */
-    static create(from, to, duration) {
-        if (from == null) {
+    static create(startValue, endValue, duration) {
+        if (startValue == null) {
             throw new Error("From is required");
         }
-        if (to == null) {
+        if (endValue == null) {
             throw new Error("To is required");
         }
         if (duration == null) {
             throw new Error("Duration is required");
         }
+        if (duration < 0) {
+            throw new Error("Duration must be a non-negative value.");
+        }
+        if (typeof startValue !== typeof endValue) {
+            throw new Error("From and To must have the same type");
+        }
 
         const tween = new Tween();
-        tween.#from = from;
-        tween.#to = to;
-        tween.#value = from;
+        tween.#startValue = startValue;
+        tween.#endValue = endValue;
+        tween.#currentValue = startValue;
         tween.#duration = duration;
+        tween.#isPlaying = true;
+
+        if (startValue instanceof Vector2D) {
+            tween.#lerpFunction = this.lerpVector2DFunction;
+        }
 
         if (!Tween.#tweensContainer || Tween.#tweensContainer.gameObject.isDestroyed) {
             Tween.#tweensContainer = new GameObject("TweensContainer").addComponent(TweensContainer);
@@ -60,25 +74,78 @@ class Tween {
         return this.#t === 1;
     }
 
+    /**
+     * Resumes playing the tween from the current state.
+     */
+    play() {
+        this.#isPlaying = true;
+    }
+
+    /**
+     * Pauses the tween at its current state.
+     */
+    pause() {
+        this.#isPlaying = false;
+    }
+
+    /**
+     * Resets the tween to its initial state, stopping it if playing.
+     */
+    reset() {
+        this.#t = 0;
+        this.#elapsedTime = 0;
+        this.#loopsLeft = this.#loopCount === -1 ? 0 : this.#loopCount;
+        this.#isRewind = false;
+        this.#isStarted = false;
+        this.pause();
+    }
+
+    /**
+     * Binds the tween to a property setter function.
+     * @param {function} setter - The property setter function to bind the tween to.
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
     bindTo(setter) {
         this.#bindProperty = setter;
         return this;
     }
 
-    setDelay(delay) {
+    /**
+     * Sets the delay before the tween starts playing.
+     * @param {number} delay - The delay in seconds (non-negative).
+     * @param {boolean} applyImmediate - Apply from value immeadiate or not
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
+    setDelay(delay, applyImmediate = true) {
         if (delay >= 0) {
             this.#delay = delay;
         }
-        return this;
-    }
-
-    setFrom(from) {
-        if (from) {
-            this.#from = from;
+        if (applyImmediate) {
+            if (this.#bindProperty)
+            {
+                this.#bindProperty(this.#startValue);
+            }
         }
         return this;
     }
 
+    /**
+     * Sets the starting value of the tween.
+     * @param {number|Vector2D} from - The starting value.
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
+    setFrom(from) {
+        if (from) {
+            this.#startValue = from;
+        }
+        return this;
+    }
+
+    /**
+     * Sets the easing function for the tween.
+     * @param {function} easeFunction - The easing function for interpolation.
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
     setEase(easeFunction) {
         if (easeFunction) {
             this.#easeFunction = easeFunction;
@@ -89,6 +156,12 @@ class Tween {
         return this;
     }
 
+    /**
+     * Sets the number of loops and the loop type for the tween.
+     * @param {number} loopCount - The number of loops (use -1 for infinite loops).
+     * @param {LoopType} loopType - The type of looping behavior (see LoopType enum).
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
     setLoops(loopCount, loopType) {
         if (loopCount) {
             this.#loopCount = loopCount;
@@ -101,33 +174,59 @@ class Tween {
         return this;
     }
 
+    /**
+     * Sets a custom interpolation function for the tween.
+     * @param {function} lerpFunction - The custom interpolation function.
+     * @throws {Error} - Throws an error if lerpFunction is not a function.
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
+    setLerpFunction(lerpFunction) {
+        if (typeof lerpFunction !== "function") {
+            throw new Error("Lerp function must be a function");
+        }
+
+        this.#lerpFunction = lerpFunction;
+
+        return this;
+    }
+
+    /**
+     * Sets a callback function to be executed when the tween starts.
+     * @param {function} callback - The callback function to be executed on tween start.
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
     onStart(callback) {
         this.#onStartCallback = callback;
         return this;
     }
 
+    /**
+     * Sets a callback function to be executed when the tween completes.
+     * @param {function} callback - The callback function to be executed on tween completion.
+     * @returns {Tween} - The current Tween instance for method chaining.
+     */
     onComplete(callback) {
         this.#onCompleteCallback = callback;
         return this;
     }
 
     update(dt) {
+        if (!this.#isPlaying) return;
+
         this.#elapsedTime += dt;
         if (this.#elapsedTime >= this.#delay) {
-            if (!this.#isStarted)
-            {
+            if (!this.#isStarted) {
                 this.#isStarted = true;
-                if (this.#onStartCallback)
-                {
+                if (this.#onStartCallback) {
                     this.#onStartCallback();
                 }
             }
 
             this.#t = Math.min(Math.max((this.#elapsedTime - this.#delay) / this.#duration, 0), 1);
-            this.#value = this.#easeFunction(this.#isRewind ? 1 - this.#t : this.#t) * (this.#to - this.#from) + this.#from;
+            this.#currentValue = this.#lerpFunction(this.#startValue, this.#endValue, this.#easeFunction(this.#isRewind ? 1 - this.#t : this.#t));
 
             if (this.#bindProperty)
-                this.#bindProperty(this.#value);
+                this.#bindProperty(this.#currentValue);
 
             if (this.#t === 1) {
                 if (this.#loopCount === -1 || this.#loopsLeft > 0) {
@@ -139,15 +238,15 @@ class Tween {
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
                     } else if (this.#loopType === LoopType.pingPong) {
-                        const temp = this.#from;
-                        this.#from = this.#to;
-                        this.#to = temp;
+                        const temp = this.#startValue;
+                        this.#startValue = this.#endValue;
+                        this.#endValue = temp;
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
                     } else if (this.#loopType === LoopType.incremental) {
-                        const delta = this.#to - this.#from;
-                        this.#from = this.#to;
-                        this.#to += delta;
+                        const delta = this.#endValue - this.#startValue;
+                        this.#startValue = this.#endValue;
+                        this.#endValue += delta;
                         this.#t = 0;
                         this.#elapsedTime = this.#delay;
                     } else if (this.#loopType === LoopType.rewind) {
@@ -162,29 +261,47 @@ class Tween {
         }
     }
 
+
+    static lerpNumberFunction(a, b, t) {
+        return t * (b - a) + a;
+    }
+
+    static lerpVector2DFunction(v1, v2, t) {
+        const lerpedX = v1.x + (v2.x - v1.x) * t;
+        const lerpedY = v1.y + (v2.y - v1.y) * t;
+        return new Vector2D(lerpedX, lerpedY);
+    }
+
     static delay(duration) {
         return Tween.create(0, 1, duration);
     }
 
-    static positionX(transform, from, to, duration) {
-        return Tween.create(from, to, duration).bindTo((value) => transform.positionX = value);
+    static position(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.position = value);
     }
 
-    static positionY(transform, from, to, duration) {
-        return Tween.create(from, to, duration).bindTo((value) => transform.positionY = value);
+    static positionX(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.positionX = value);
     }
 
-    static localPositionX(transform, from, to, duration) {
-        return Tween.create(from, to, duration).bindTo((value) => transform.localPositionX = value);
+    static positionY(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.positionY = value);
     }
 
-    static localPositionY(transform, from, to, duration) {
-        return Tween.create(from, to, duration).bindTo((value) => transform.localPositionY = value);
+    static localPosition(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localPosition = value);
     }
 
-    static localRotation(transform, from, to, duration)
-    {
-        return Tween.create(from, to, duration).bindTo((value) => transform.localRotation = value);
+    static localPositionX(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localPositionX = value);
+    }
+
+    static localPositionY(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localPositionY = value);
+    }
+
+    static localRotation(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localRotation = value);
     }
 }
 

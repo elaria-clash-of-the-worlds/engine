@@ -1,13 +1,4 @@
-import {
-    Component,
-    Debug,
-    GameObject,
-    SceneDescription,
-    Sprite,
-    Tween,
-    Vector2D,
-    WorldText
-} from "../../core/ElariaCore.js";
+import {Component, Debug, GameObject, SceneDescription, Sprite, Tween, Vector2D, WorldText} from "../../core/Elaria.js";
 import {Ease, LoopType} from "../../core/Tween.js";
 
 class TweenDemo extends SceneDescription {

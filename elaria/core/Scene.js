@@ -1,6 +1,6 @@
 import Vector2D from "./Vector2D.js";
 
-class Scene {
+export default class Scene {
     #name = "";
     #gameObjects = [];
 
@@ -55,5 +55,3 @@ class Scene {
         }
     }
 }
-
-export default Scene;

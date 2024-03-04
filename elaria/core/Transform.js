@@ -2,7 +2,7 @@ import Component from "./Component.js";
 import Vector2D from "./Vector2D.js";
 import SceneManager from "./SceneManager.js";
 
-class Transform extends Component {
+export default class Transform extends Component {
     #parent = null;
     #localPosition = Vector2D.zero;
     #localRotation = 0;
@@ -301,5 +301,3 @@ class Transform extends Component {
         parentChildren.splice(parentChildren.indexOf(this), 1);
     }
 }
-
-export default Transform;

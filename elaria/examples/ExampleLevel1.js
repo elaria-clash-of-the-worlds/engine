@@ -1,4 +1,4 @@
-import {AudioSource, GameObject, SceneDescription, Sprite, Vector2D} from "../core/ElariaCore.js";
+import {AudioSource, GameObject, SceneDescription, Sprite, Vector2D} from "../core/Elaria.js";
 import Player from "./Player.js";
 import CircleMover from "./CircleMover.js";
 

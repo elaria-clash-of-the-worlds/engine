@@ -1,4 +1,4 @@
-import {AudioSource, GameObject, SceneDescription, Sprite, Vector2D} from "../core/ElariaCore.js";
+import {AudioSource, GameObject, SceneDescription, Sprite, Vector2D} from "../core/Elaria.js";
 import Player from "./Player.js";
 import CircleMover from "./CircleMover.js";
 
@@ -21,12 +21,12 @@ class ExampleLevel2 extends SceneDescription {
         sprite.height = 156;
 
         const audioSource = player.addComponent(AudioSource);
-        audioSource.source = '/elaria/examples/assets/bubbles.wav';
+        audioSource.source = "/elaria/examples/assets/bubbles.wav";
 
         const childObject = new GameObject("Child object");
         childObject.transform.localPosition = new Vector2D(100, 0);
         childObject.transform.setParent(player.transform);
-        childObject.addComponent(CircleMover)
+        childObject.addComponent(CircleMover);
 
         const childSprite = childObject.addComponent(Sprite);
         childSprite.imageSource = "/elaria/examples/assets/coka.png";

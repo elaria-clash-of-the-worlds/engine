@@ -1,6 +1,6 @@
 import SceneDescription from "./SceneDescription.js";
 
-class SceneManager {
+export default class SceneManager {
     static #scenes = [];
     static #activeScene;
 
@@ -41,5 +41,3 @@ class SceneManager {
         this.#scenes[sceneIndex].build();
     }
 }
-
-export default SceneManager;

@@ -1,11 +1,11 @@
 import Component from "./Component.js";
-import ElariaGame from "./ElariaGame.js";
+import Game from "./Game.js";
 
 class Graphic extends Component {
     #context;
     constructor() {
         super();
-        this.#context = ElariaGame.canvas.getContext("2d");
+        this.#context = Game.canvas.getContext("2d");
     }
     get context()
     {

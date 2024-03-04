@@ -1,7 +1,7 @@
 import Transform from "./Transform.js";
 import Component from "./Component.js";
 import SceneManager from "./SceneManager.js";
-import ElariaGame from "./ElariaGame.js";
+import Game from "./Game.js";
 
 class GameObject {
     #awakeCalled = false;
@@ -82,7 +82,7 @@ class GameObject {
             return;
         }
 
-        const context = ElariaGame.canvas.getContext("2d");
+        const context = Game.canvas.getContext("2d");
         context.save();
 
         let xScaleFactor = 1;

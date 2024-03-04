@@ -1,4 +1,4 @@
-class Component {
+export default class Component {
     _gameObject = null;
     _transform = null;
 
@@ -51,5 +51,3 @@ class Component {
     render() {
     }
 }
-
-export default Component;

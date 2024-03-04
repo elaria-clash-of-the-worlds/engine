@@ -1,6 +1,6 @@
 import Graphic from "./Graphic.js";
 
-class WorldText extends Graphic {
+export default class WorldText extends Graphic {
     constructor() {
         super();
         this.text = "";
@@ -23,5 +23,3 @@ class WorldText extends Graphic {
         return cloneWorldText;
     }
 }
-
-export default WorldText;

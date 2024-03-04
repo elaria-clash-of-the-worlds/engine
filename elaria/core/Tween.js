@@ -1,6 +1,6 @@
 import Component from "./Component.js";
 import GameObject from "./GameObject.js";
-import {Vector2D} from "./ElariaCore.js";
+import Vector2D from "./Vector2D.js";
 
 class Tween {
     #startValue;

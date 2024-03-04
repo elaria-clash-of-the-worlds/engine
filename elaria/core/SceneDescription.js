@@ -1,6 +1,6 @@
 import Scene from "./Scene.js";
 
-class SceneDescription {
+export default class SceneDescription {
     #sceneName;
     constructor(sceneName = "New Scene") {
         this._scene = null;
@@ -15,5 +15,3 @@ class SceneDescription {
         return this._scene;
     }
 }
-
-export default SceneDescription;

@@ -1,4 +1,4 @@
-export {default as ElariaGame} from "./ElariaGame.js";
+export {default as ElariaGame} from "./Game.js";
 export {default as GameObject} from "./GameObject.js";
 export {default as Component} from "./Component.js";
 export {default as SceneManager} from "./SceneManager.js";

@@ -1,4 +1,4 @@
-class Vector2D {
+export default class Vector2D {
     constructor(x, y) {
         this.x = x || 0;
         this.y = y || 0;
@@ -64,5 +64,3 @@ class Vector2D {
         return `(${this.x}, ${this.y})`;
     }
 }
-
-export default Vector2D;

@@ -159,18 +159,16 @@ class Tween {
     /**
      * Sets the number of loops and the loop type for the tween.
      * @param {number} loopCount - The number of loops (use -1 for infinite loops).
-     * @param {LoopType} loopType - The type of looping behavior (see LoopType enum).
+     * @param {number} loopType - The type of looping behavior (see LoopType enum).
      * @returns {Tween} - The current Tween instance for method chaining.
      */
-    setLoops(loopCount, loopType) {
+    setLoops(loopCount, loopType = LoopType.restart) {
         if (loopCount) {
             this.#loopCount = loopCount;
             this.#loopsLeft = this.#loopCount === -1 ? 0 : loopCount;
         }
-        if (loopType) {
-            this.#loopType = loopType;
-            this.#isRewind = false;
-        }
+        this.#loopType = loopType;
+        this.#isRewind = false;
         return this;
     }
 

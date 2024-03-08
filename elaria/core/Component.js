@@ -5,7 +5,7 @@ export default class Component {
     /**
      * The transform component of the gameObject.
      *
-     * @return {import("./Transform.js").Transform}
+     * @return {import("./Transform.js").default | import("./RectTransform.js").default}
      */
     get transform() {
         return this._transform;
@@ -14,7 +14,7 @@ export default class Component {
     /**
      * The game object this component is attached to.
      *
-     * @return {import("./GameObject.js").GameObject}
+     * @return {import("./GameObject.js").default}
      */
     get gameObject() {
         return this._gameObject;
@@ -48,6 +48,7 @@ export default class Component {
     update(dt) {
     }
 
-    render() {
+    // eslint-disable-next-line no-unused-vars
+    render(ctx) {
     }
 }

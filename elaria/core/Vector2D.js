@@ -63,4 +63,8 @@ export default class Vector2D {
     toString() {
         return `(${this.x}, ${this.y})`;
     }
+
+    clone() {
+        return new Vector2D(this.x, this.y);
+    }
 }

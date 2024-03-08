@@ -1,6 +1,6 @@
-import Graphic from "./Graphic.js";
+import Component from "./Component.js";
 
-export default class Sprite extends Graphic {
+export default class Sprite extends Component {
     #image = new Image();
 
     get imageSource() {
@@ -35,7 +35,7 @@ export default class Sprite extends Graphic {
         return clonedSprite;
     }
 
-    render() {
-        this.context.drawImage(this.#image,  -this.width / 2, -this.height / 2, this.width, this.height);
+    render(ctx) {
+        ctx.drawImage(this.#image,  -this.width / 2, -this.height / 2, this.width, this.height);
     }
 }

@@ -1,16 +1,22 @@
 import Component from "./Component.js";
-import Game from "./Game.js";
+import RectTransform from "./RectTransform.js";
 
-class Graphic extends Component {
-    #context;
-    constructor() {
-        super();
-        this.#context = Game.canvas.getContext("2d");
+export default class Graphic extends Component {
+    awake() {
+        if (this.gameObject.getComponent(RectTransform) == null)
+        {
+            throw new Error("Can't find RectTransform on GameObject. When creating new GameObject use withTransform boolean flag!");
+        }
     }
-    get context()
-    {
-        return this.#context;
+
+    // eslint-disable-next-line no-unused-vars
+    draw(ctx, x, y, w, h){
+    }
+
+    render(ctx) {
+        const rt = this.transform;
+        const rectX = -rt.width * rt.pivot.x;
+        const rectY = -rt.height * rt.pivot.y;
+        this.draw(ctx, rectX, rectY, rt.width, rt.height);
     }
 }
-
-export default Graphic;

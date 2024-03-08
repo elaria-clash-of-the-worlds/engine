@@ -1,6 +1,6 @@
 import Component from "./Component.js";
 import Vector2D from "./Vector2D.js";
-import SceneManager from "./SceneManager.js";
+import GameObject from "./GameObject.js";
 
 export default class Transform extends Component {
     #parent = null;
@@ -8,8 +8,7 @@ export default class Transform extends Component {
     #localRotation = 0;
     #localScale = Vector2D.one;
 
-    constructor() {
-        super();
+    _init() {
         this._children = [];
         this.setParent(null);
     }
@@ -193,6 +192,8 @@ export default class Transform extends Component {
 
     /**
      * Get the children of the Transform.
+     *
+     * @return {Array<Transform>}
      */
     get children() {
         return this._children;
@@ -204,7 +205,7 @@ export default class Transform extends Component {
      * @return {Transform} The parent of the current object, or null if the current object is the root parent.
      */
     get parent() {
-        if (this.#parent === SceneManager.activeScene._container) {
+        if (this.#parent === this.gameObject.scene._container) {
             return null;
         }
         return this.#parent;
@@ -237,7 +238,7 @@ export default class Transform extends Component {
 
         const previousPosition = this.position;
         const previousRotation = this.rotation;
-        this.#parent = newParent == null ? SceneManager.activeScene._container : newParent;
+        this.#parent = newParent == null ? this.gameObject.scene._container : newParent;
         this.#parent._children.push(this);
 
         if (worldPositionStays && oldParent !== null) {
@@ -288,16 +289,33 @@ export default class Transform extends Component {
         return this._children[childIndex];
     }
 
+    cloneTo(newTransform, newParent) {
+        // Set world properties, because at that moment transform doesn't have a parent
+        newTransform.position = this.position;
+        newTransform.rotation = this.rotation;
+        newTransform.localScale = this.localScale;
+
+        // Set the parent for the clone transform
+        if (newParent instanceof Transform) {
+            newTransform.parent = newParent;
+        }
+
+        // Recursively instantiate children
+        for (const child of this.children) {
+            GameObject.instantiate(child.gameObject, newTransform);
+        }
+    }
+
     /**
      * Called when the object is being destroyed.
      */
     onDestroy() {
-        let parentChildren;
+        let parentChildrenContainer;
         if (this.#parent === null) {
-            parentChildren = SceneManager.activeScene._container._children;
+            parentChildrenContainer = this.gameObject.scene._container._children;
         } else {
-            parentChildren = this.#parent._children;
+            parentChildrenContainer = this.#parent._children;
         }
-        parentChildren.splice(parentChildren.indexOf(this), 1);
+        parentChildrenContainer.splice(parentChildrenContainer.indexOf(this), 1);
     }
 }

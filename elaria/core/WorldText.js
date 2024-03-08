@@ -1,6 +1,6 @@
-import Graphic from "./Graphic.js";
+import Component from "./Component.js";
 
-export default class WorldText extends Graphic {
+export default class WorldText extends Component {
     constructor() {
         super();
         this.text = "";
@@ -8,11 +8,11 @@ export default class WorldText extends Graphic {
         this.fontFamily = "serif";
     }
 
-    render() {
-        this.context.save();
-        this.context.font = `${this.fontSize}px ${this.fontFamily}`;
-        this.context.fillText(this.text, 0, 0);
-        this.context.restore();
+    render(ctx) {
+        ctx.save();
+        ctx.font = `${this.fontSize}px ${this.fontFamily}`;
+        ctx.fillText(this.text, 0, 0);
+        ctx.restore();
     }
 
     clone() {

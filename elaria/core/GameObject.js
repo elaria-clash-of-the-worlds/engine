@@ -2,6 +2,7 @@ import Transform from "./Transform.js";
 import Component from "./Component.js";
 import SceneManager from "./SceneManager.js";
 import Game from "./Game.js";
+import RectTransform from "./RectTransform.js";
 
 class GameObject {
     #awakeCalled = false;
@@ -12,22 +13,34 @@ class GameObject {
     #activeSelf = true;
     #isDestroyed = false;
     #transform;
+    #scene;
 
-    constructor(name) {
+    constructor(name, withRectTransform = false) {
         this.name = name || "GameObject";
 
         this.components = [];
-        this.#transform = this.addComponent(Transform);
+        this.#transform = this.addComponent(withRectTransform ? RectTransform : Transform);
 
+        this.#scene = SceneManager.activeScene;
         SceneManager.activeScene.addGameObject(this);
+
+        this.#transform._init();
     }
 
     /**
-     * The Transform attached to this GameObject.
-     * @return {import("./Transform.js").Transform} The value of the transform property.
+     * The Transform component attached to this GameObject.
+     * @return {import("./Transform.js").default | import("RectTransform.js").default}.
      */
     get transform() {
         return this.#transform;
+    }
+
+    /**
+     *
+     * @returns {import("Scene.js").default}
+     */
+    get scene() {
+        return this.#scene;
     }
 
     /**
@@ -97,7 +110,7 @@ class GameObject {
         context.scale(this.transform.localScale.x, this.transform.localScale.y);
 
         for (const component of this.components) {
-            component.render();
+            component.render(context);
         }
         for (const transform of this.transform.children) {
             transform.gameObject._render();
@@ -152,7 +165,7 @@ class GameObject {
                 throw new Error("The added component must be an instance of Component.");
             }
 
-            if (component.prototype instanceof Transform) {
+            if (component.prototype instanceof Transform && this.#transform != null) {
                 throw new Error("Transform always exists in a GameObject, you don't need to add it by yourself!");
             }
 
@@ -244,19 +257,7 @@ class GameObject {
             cloneObject.addComponent(originalComponent.clone());
         }
 
-        cloneObject.transform.position = original.transform.position;
-        cloneObject.transform.rotation = original.transform.rotation;
-        cloneObject.transform.localScale = original.transform.localScale;
-
-        // Set the parent for the clone transform
-        if (parent instanceof Transform) {
-            cloneObject.transform.parent = parent;
-        }
-
-        // Recursively instantiate children
-        for (const child of original.transform.children) {
-            GameObject.instantiate(child.gameObject, cloneObject.transform);
-        }
+        original.transform.cloneTo(cloneObject.transform, parent);
 
         return cloneObject;
     }

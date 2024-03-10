@@ -107,6 +107,7 @@ export default class RectTransform extends Transform {
 
     set offsetMin(value) {
         this.#offsetMin = value;
+        this.#changed = true;
     }
 
     get offsetMax() {
@@ -115,6 +116,7 @@ export default class RectTransform extends Transform {
 
     set offsetMax(value) {
         this.#offsetMax = value;
+        this.#changed = true;
     }
 
     get anchoredPosition() {
@@ -128,6 +130,7 @@ export default class RectTransform extends Transform {
         const anchorMax = this.anchorMax.mul(values.parentSize);
         const center = anchorMin.add(anchorMax).divScalar(2);
         super.localPosition = center.add(value).sub(values.parentPivotInRectangleSpace);
+        this.#shouldRecalculateOffsets = true;
     }
 
     get localPosition() {
@@ -151,10 +154,10 @@ export default class RectTransform extends Transform {
 
         return {
             parentSize: new Vector2D(parentWidth, parentHeight),
-            parentWidth : parentWidth,
-            parentHeight : parentHeight,
-            parentPivot : parentPivot,
-            parentPivotInRectangleSpace : parentPivotInRectangleSpace
+            parentWidth: parentWidth,
+            parentHeight: parentHeight,
+            parentPivot: parentPivot,
+            parentPivotInRectangleSpace: parentPivotInRectangleSpace
         };
     }
 
@@ -162,6 +165,148 @@ export default class RectTransform extends Transform {
         super.setParent(newParent, worldPositionStays);
         if (newParent === this) return;
         this.recalculateOffsets();
+    }
+
+    /**
+     * Sets the anchors of the RectTransform.
+     * @param {AnchorsPreset} preset - The preset to set the anchors to.
+     * @param {boolean} applyAnchors - Whether to apply the anchors immediately.
+     */
+    setAnchors(preset, applyAnchors = true) {
+        let offsetMin = Vector2D.zero;
+        let offsetMax = Vector2D.zero;
+        let anchoredPosition = Vector2D.zero;
+
+        switch (preset) {
+        case AnchorsPreset.fullRect:
+            this.anchorMin = new Vector2D(0, 0);
+            this.anchorMax = new Vector2D(1, 1);
+            offsetMin = new Vector2D(0, 0);
+            offsetMax = new Vector2D(0, 0);
+            break;
+        case AnchorsPreset.topLeft:
+            this.anchorMin = new Vector2D(0, 0);
+            this.anchorMax = new Vector2D(0, 0);
+            anchoredPosition = new Vector2D(this.width / 2, this.height / 2);
+            offsetMin = new Vector2D(0, 0);
+            offsetMax = new Vector2D(this.width, this.height);
+            break;
+        case AnchorsPreset.topRight:
+            this.anchorMin = new Vector2D(1, 0);
+            this.anchorMax = new Vector2D(1, 0);
+            anchoredPosition = new Vector2D(-this.width / 2, this.height / 2);
+            offsetMin = new Vector2D(-this.width, 0);
+            offsetMax = new Vector2D(0, this.height);
+            break;
+        case AnchorsPreset.bottomRight:
+            this.anchorMin = new Vector2D(1, 1);
+            this.anchorMax = new Vector2D(1, 1);
+            anchoredPosition = new Vector2D(-this.width / 2, -this.height / 2);
+            offsetMin = new Vector2D(-this.width, -this.height);
+            offsetMax = new Vector2D(0, 0);
+            break;
+        case AnchorsPreset.bottomLeft:
+            this.anchorMin = new Vector2D(0, 1);
+            this.anchorMax = new Vector2D(0, 1);
+            anchoredPosition = new Vector2D(this.width / 2, -this.height / 2);
+            offsetMin = new Vector2D(0, -this.height);
+            offsetMax = new Vector2D(this.width, 0);
+            break;
+        case AnchorsPreset.centerLeft:
+            this.anchorMin = new Vector2D(0, 0.5);
+            this.anchorMax = new Vector2D(0, 0.5);
+            anchoredPosition = new Vector2D(this.width / 2, 0);
+            offsetMin = new Vector2D(0, -this.height / 2);
+            offsetMax = new Vector2D(this.width, this.height / 2);
+            break;
+        case AnchorsPreset.centerTop:
+            this.anchorMin = new Vector2D(0.5, 0);
+            this.anchorMax = new Vector2D(0.5, 0);
+            anchoredPosition = new Vector2D(0, this.height / 2);
+            offsetMin = new Vector2D(-this.width / 2, 0);
+            offsetMax = new Vector2D(this.width / 2, this.height);
+            break;
+        case AnchorsPreset.centerRight:
+            this.anchorMin = new Vector2D(1, 0.5);
+            this.anchorMax = new Vector2D(1, 0.5);
+            anchoredPosition = new Vector2D(-this.width / 2, 0);
+            offsetMin = new Vector2D(-this.width, -this.height / 2);
+            offsetMax = new Vector2D(0, this.height / 2);
+            break;
+        case AnchorsPreset.centerBottom:
+            this.anchorMin = new Vector2D(0.5, 1);
+            this.anchorMax = new Vector2D(0.5, 1);
+            anchoredPosition = new Vector2D(0, -this.height / 2);
+            offsetMin = new Vector2D(-this.width / 2, -this.height);
+            offsetMax = new Vector2D(this.width / 2, 0);
+            break;
+        case AnchorsPreset.center:
+            this.anchorMin = new Vector2D(0.5, 0.5);
+            this.anchorMax = new Vector2D(0.5, 0.5);
+            anchoredPosition = new Vector2D(0, 0);
+            offsetMin = new Vector2D(-this.width / 2, -this.height / 2);
+            offsetMax = new Vector2D(this.width / 2, this.height / 2);
+            break;
+        case AnchorsPreset.leftWide:
+            this.anchorMin = new Vector2D(0, 0);
+            this.anchorMax = new Vector2D(0, 1);
+            anchoredPosition = new Vector2D(this.width / 2, 0);
+            offsetMin = new Vector2D(0, 0);
+            offsetMax = new Vector2D(this.width, 0);
+            break;
+        case AnchorsPreset.topWide:
+            this.anchorMin = new Vector2D(0, 0);
+            this.anchorMax = new Vector2D(1, 0);
+            anchoredPosition = new Vector2D(0, this.height / 2);
+            offsetMin = new Vector2D(0, 0);
+            offsetMax = new Vector2D(0, this.height);
+            break;
+        case AnchorsPreset.rightWide:
+            this.anchorMin = new Vector2D(1, 0);
+            this.anchorMax = new Vector2D(1, 1);
+            anchoredPosition = new Vector2D(-this.width / 2, 0);
+            offsetMin = new Vector2D(-this.width, 0);
+            offsetMax = new Vector2D(0, 0);
+            break;
+        case AnchorsPreset.bottomWide:
+            this.anchorMin = new Vector2D(0, 1);
+            this.anchorMax = new Vector2D(1, 1);
+            anchoredPosition = new Vector2D(0, -this.height / 2);
+            offsetMin = new Vector2D(0, -this.height);
+            offsetMax = new Vector2D(0, 0);
+            break;
+        case AnchorsPreset.vCenterWide:
+            this.anchorMin = new Vector2D(0.5, 0);
+            this.anchorMax = new Vector2D(0.5, 1);
+            anchoredPosition = new Vector2D(0, 0);
+            offsetMin = new Vector2D(-this.width / 2, 0);
+            offsetMax = new Vector2D(this.width / 2, 0);
+            break;
+        case AnchorsPreset.hCenterWide:
+            this.anchorMin = new Vector2D(0, 0.5);
+            this.anchorMax = new Vector2D(1, 0.5);
+            anchoredPosition = new Vector2D(0, 0);
+            offsetMin = new Vector2D(0, -this.height / 2);
+            offsetMax = new Vector2D(0, this.height / 2);
+            break;
+        }
+
+        if (!applyAnchors) {
+            const values = this.#getParentValues();
+            const anchorMin = this.anchorMin.mul(values.parentSize);
+            const anchorMax = this.anchorMax.mul(values.parentSize);
+            const center = anchorMin.add(anchorMax).divScalar(2);
+            this.anchoredPosition = this.localPosition.add(values.parentPivotInRectangleSpace).sub(center);
+
+            this.recalculateOffsets();
+            this.#shouldRecalculateOffsets = false;
+        } else {
+            this.offsetMin = offsetMin;
+            this.offsetMax = offsetMax;
+            this.anchoredPosition = anchoredPosition;
+            this.recalculateRect();
+            this.#changed = false;
+        }
     }
 
     recalculateOffsets() {
@@ -172,11 +317,6 @@ export default class RectTransform extends Transform {
         const pivotInRectangleSpace = this.localPosition.add(values.parentPivotInRectangleSpace);
         this.offsetMin = pivotInRectangleSpace.sub(pivotPosition).sub(anchorMin);
         this.offsetMax = anchorMin.add(this.offsetMin).add(this.width, this.height).sub(anchorMax);
-        console.log("RecalculateOffsets: " + this.gameObject.name);
-        console.log(anchorMin.toString() + "  —  " + anchorMax.toString());
-        console.log(this.width + "  —  " + this.height);
-        console.log(this.offsetMin.toString());
-        console.log(this.offsetMax.toString());
     }
 
     recalculateRect() {
@@ -185,23 +325,9 @@ export default class RectTransform extends Transform {
         const anchorMin = this.anchorMin.mul(values.parentSize);
         const anchorMax = this.anchorMax.mul(values.parentSize);
 
-        console.log("RecaclulateRect: " + this.gameObject.name);
-        console.log(values.parentSize.toString());
-        console.log(this.anchoredPosition.toString());
-        console.log(anchorMin.toString() + "  —  " + anchorMax.toString());
-        console.log(this.offsetMin.toString());
-        console.log(this.offsetMax.toString());
+        this.#width = anchorMax.x + this.offsetMax.x - (anchorMin.x + this.offsetMin.x);
+        this.#height = anchorMax.y + this.offsetMax.y - (anchorMin.y + this.offsetMin.y);
 
-        const newWidth = anchorMax.x + this.offsetMax.x - (anchorMin.x + this.offsetMin.x);
-        const newHeight = anchorMax.y + this.offsetMax.y - (anchorMin.y + this.offsetMin.y);
-
-        console.log(this.width + "  —  " + this.height);
-        console.log(newWidth + "  —  " + newHeight);
-
-        this.#width = newWidth;
-        this.#height = newHeight;
-
-        // const pivotInRectangleSpace = anchorMin.add(this.offsetMin).add(this.pivot.mul(newWidth, newHeight));
         const center = anchorMin.add(anchorMax).divScalar(2);
         super.localPosition = center.add(this.anchoredPosition).sub(values.parentPivotInRectangleSpace);
 
@@ -223,13 +349,11 @@ export default class RectTransform extends Transform {
 
     // eslint-disable-next-line no-unused-vars
     update(dt) {
-        if (this.#shouldRecalculateOffsets)
-        {
+        if (this.#shouldRecalculateOffsets) {
             this.#shouldRecalculateOffsets = false;
             this.recalculateOffsets();
         }
-        if (this.#changed)
-        {
+        if (this.#changed) {
             this.#changed = false;
             this.#recalculateChildren();
         }
@@ -244,3 +368,24 @@ export default class RectTransform extends Transform {
         newTransform.anchorMax = this.anchorMax.clone();
     }
 }
+
+const AnchorsPreset = Object.freeze({
+    fullRect: 0,
+    topLeft: 1,
+    topRight: 2,
+    bottomRight: 3,
+    bottomLeft: 4,
+    centerLeft: 5,
+    centerTop: 6,
+    centerRight: 7,
+    centerBottom: 8,
+    center: 9,
+    leftWide: 10,
+    topWide: 11,
+    rightWide: 12,
+    bottomWide: 13,
+    vCenterWide: 14,
+    hCenterWide: 15
+});
+
+export {AnchorsPreset};

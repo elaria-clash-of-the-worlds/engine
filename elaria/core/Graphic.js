@@ -14,12 +14,6 @@ export default class Graphic extends Component {
 
     render(ctx) {
         const rt = this.transform;
-        const rectX = -rt.width * rt.pivot.x;
-        const rectY = -rt.height * rt.pivot.y;
-        this.draw(ctx, rectX, rectY, rt.width, rt.height);
-        ctx.save();
-        ctx.fillStyle = "magenta";
-        ctx.fillRect(-5, -5, 10, 10);
-        ctx.restore();
+        this.draw(ctx, -rt.width * rt.pivot.x, -rt.height * rt.pivot.y, rt.width, rt.height);
     }
 }

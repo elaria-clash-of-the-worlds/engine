@@ -38,10 +38,10 @@ export default class Transform extends Component {
      */
     set position(newPosition) {
         if (this.#parent == null) {
-            this.#localPosition = newPosition;
+            this.localPosition = newPosition;
         } else {
             const parentWorldPosition = this.#parent.position;
-            this.#localPosition = newPosition.sub(parentWorldPosition).rotate(-this.#parent.rotation);
+            this.localPosition = newPosition.sub(parentWorldPosition).rotate(-this.#parent.rotation);
         }
     }
 
@@ -228,6 +228,8 @@ export default class Transform extends Component {
         if (newParent !== null && !(newParent instanceof Transform)) {
             throw new Error("Parent must be an instance of Transform or null.");
         }
+
+        if (newParent === this) return;
 
         const oldParent = this.#parent;
 

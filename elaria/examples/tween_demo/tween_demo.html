@@ -6,10 +6,10 @@
     <title>Title</title>
     <link rel="stylesheet" href="../../../style.css">
     <script type="module">
-        import {ElariaGame, SceneManager} from "../../core/Elaria.js";
+        import {Game, SceneManager} from "../../core/Elaria.js";
         import TweenDemo from "./TweenDemo.js";
 
-        const game = new ElariaGame(document.getElementById("canvas"));
+        const game = new Game(document.getElementById("canvas"));
         SceneManager.registerScene(new TweenDemo());
 
         game.start();

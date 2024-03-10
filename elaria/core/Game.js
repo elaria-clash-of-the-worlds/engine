@@ -1,7 +1,7 @@
 import SceneManager from "./SceneManager.js";
 
 export default class Game {
-    static instance;
+    static #instance;
     #deltaTime = 0;
     #activeScene;
     #canvas;
@@ -16,7 +16,15 @@ export default class Game {
         const keydrownTag = document.createElement("script");
         keydrownTag.src = "/elaria/thirdparty/keydrown.js";
         document.head.appendChild(keydrownTag);
-        Game.instance = this;
+        Game.#instance = this;
+    }
+
+    /**
+     * The instance of the Game.
+     * @returns {Game}
+     */
+    static get instance() {
+        return Game.#instance;
     }
 
     #startGameLoop() {
@@ -66,8 +74,12 @@ export default class Game {
         }
     }
 
+    /**
+     * The canvas element of the game.
+     * @returns {HTMLCanvasElement}
+     */
     static get canvas() {
-        return Game.instance.#canvas;
+        return Game.#instance.#canvas;
     }
 
     start(sceneIndex) {

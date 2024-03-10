@@ -98,15 +98,12 @@ class GameObject {
         const context = Game.canvas.getContext("2d");
         context.save();
 
-        let xScaleFactor = 1;
-        let yScaleFactor = 1;
-        if (this.transform.parent != null) {
-            xScaleFactor = this.transform.parent.localScale.x;
-            yScaleFactor = this.transform.parent.localScale.y;
-        }
+        const xScaleFactor = this.transform.parent?.localScale.x || 1;
+        const yScaleFactor = this.transform.parent?.localScale.y || 1;
 
+        const rad2deg = Math.PI / 180.0;
         context.translate(this.transform.localPosition.x / xScaleFactor, this.transform.localPosition.y / yScaleFactor);
-        context.rotate(this.transform.localRotation * (Math.PI / 180.0));
+        context.rotate(this.transform.localRotation * rad2deg);
         context.scale(this.transform.localScale.x, this.transform.localScale.y);
 
         for (const component of this.components) {

@@ -12,6 +12,16 @@ export default class EImage extends Graphic {
     }
 
     draw(ctx, x, y, w, h) {
+        ctx.save();
+
+        ctx.fillStyle = this.gameObject.name;
+        ctx.fillRect(x, y, w, h);
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(x - 5, y - 5, 10, 10);
+
         ctx.drawImage(this.#image, x, y, w, h);
+
+        ctx.restore();
     }
 }

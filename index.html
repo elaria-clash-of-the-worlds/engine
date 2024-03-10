@@ -6,11 +6,11 @@
     <title>Title</title>
     <link rel="stylesheet" href="style.css">
     <script type="module">
-        import {ElariaGame, SceneManager} from "./elaria/core/Elaria.js";
+        import {Game, SceneManager} from "./elaria/core/Elaria.js";
         import ExampleLevel1 from "./elaria/examples/ExampleLevel1.js";
         import ExampleLevel2 from "./elaria/examples/ExampleLevel2.js";
 
-        const game = new ElariaGame(document.getElementById("canvas"));
+        const game = new Game(document.getElementById("canvas"));
         SceneManager.registerScene(new ExampleLevel1());
         SceneManager.registerScene(new ExampleLevel2());
 

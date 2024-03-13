@@ -1,10 +1,12 @@
 import SceneManager from "./SceneManager.js";
+import Input from "./Input.js";
 
 export default class Game {
     static #instance;
     #deltaTime = 0;
     #activeScene;
     #canvas;
+    #input;
 
     constructor(canvasElement) {
         this.#activeScene = null;
@@ -12,10 +14,6 @@ export default class Game {
         this.#canvas.width = window.innerWidth;
         this.#canvas.height = window.innerHeight;
 
-        // TODO Maybe it's bad and we should do it in other way
-        const keydrownTag = document.createElement("script");
-        keydrownTag.src = "/elaria/thirdparty/keydrown.js";
-        document.head.appendChild(keydrownTag);
         Game.#instance = this;
     }
 
@@ -28,15 +26,7 @@ export default class Game {
     }
 
     #startGameLoop() {
-        const startLoopWhenKdLoaded = () => {
-            if (typeof kd !== "undefined") {
-                this.#startMainGameLoop();
-            } else {
-                window.requestAnimationFrame(startLoopWhenKdLoaded);
-            }
-        };
-
-        startLoopWhenKdLoaded();
+        this.#startMainGameLoop();
     }
 
     #startMainGameLoop() {
@@ -57,6 +47,7 @@ export default class Game {
     #update() {
         if (this.#activeScene) {
             this.#activeScene.update(this.#deltaTime);
+            Input.update();
         }
 
         if (this.#activeScene !== SceneManager.activeScene) {
@@ -88,6 +79,7 @@ export default class Game {
         } else {
             SceneManager.loadScene(0);
         }
+        this.#input = new Input();
         this.#startGameLoop();
     }
 }

@@ -3,6 +3,7 @@ import Vector2D from "../core/Vector2D.js";
 import Debug from "../debug/Debug.js";
 import AudioSource from "../core/AudioSource.js";
 import SceneManager from "../core/SceneManager.js";
+import Input from "../core/Input.js";
 
 export default class Player extends Component {
     static MAX_SPEED = 500;
@@ -22,33 +23,48 @@ export default class Player extends Component {
     }
 
     update(dt) {
-        this.acceleration = Math.max(Player.MIN_ACCELERATION, this.acceleration + (kd.SHIFT.isDown() ? 1 : -1) * this.acceleration * dt);
+        this.acceleration = Math.max(Player.MIN_ACCELERATION, this.acceleration + (Input.isKeyHold("ShiftLeft") ? 1 : -1) * this.acceleration * dt);
 
-        if (kd.W.isDown()) {
+        if (Input.isMouseDown(0))
+        {
+            console.log("Mouse is down");
+        }
+
+        if (Input.isMouseHold(2))
+        {
+            console.log("Mouse is hold");
+        }
+
+        if (Input.isMouseUp(1))
+        {
+            console.log("Mouse is up");
+        }
+
+        if (Input.isKeyHold("KeyW")) {
             if (this.velocity.length <= Player.MAX_SPEED)
                 this.velocity.y -= this.acceleration;
         }
 
-        if (kd.A.isDown()) {
+        if (Input.isKeyHold("KeyA")) {
             if (this.velocity.length <= Player.MAX_SPEED)
                 this.velocity.x -= this.acceleration;
         }
 
-        if (kd.S.isDown()) {
+        if (Input.isKeyHold("KeyS")) {
             if (this.velocity.length <= Player.MAX_SPEED)
                 this.velocity.y += this.acceleration;
         }
 
-        if (kd.D.isDown()) {
+        if (Input.isKeyHold("KeyD")) {
             if (this.velocity.length <= Player.MAX_SPEED)
                 this.velocity.x += this.acceleration;
         }
 
-        if (kd.SPACE.isDown()) {
+        if (Input.isKeyHold("Space")) {
             this.gameObject.getComponent(AudioSource).play();
         }
 
-        if (kd.H.isDown()) {
+        if (Input.isKeyHold("KeyH")) {
             this.delay += dt;
             if (this.delay > 0.5) {
                 SceneManager.loadScene(this.loadSceneIndex);

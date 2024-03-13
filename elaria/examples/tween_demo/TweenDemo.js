@@ -1,5 +1,6 @@
 import {Component, Debug, GameObject, SceneDescription, Sprite, Tween, Vector2D, WorldText} from "../../core/Elaria.js";
 import {Ease, LoopType} from "../../core/Tween.js";
+import Input from "../../core/Input.js";
 
 class TweenDemo extends SceneDescription {
     constructor() {
@@ -16,6 +17,7 @@ class TweenDemoComponent extends Component {
     constructor() {
         super();
         this.parentContainer = null;
+        this.parentContainerTargetY = 0;
     }
 
     start() {
@@ -149,16 +151,16 @@ class TweenDemoComponent extends Component {
     }
 
     update(dt) {
-        if (kd.UP.isDown()) {
-            this.parentContainer.transform.positionY = Math.min(0, this.parentContainer.transform.positionY + 500 * dt);
+        if (Input.isScrollUp()) {
+            this.parentContainerTargetY = Math.min(0, this.parentContainerTargetY + 2000 * dt);
         }
 
-        if (kd.DOWN.isDown()) {
-            this.parentContainer.transform.positionY = this.parentContainer.transform.positionY - 500 * dt;
+        if (Input.isScrollDown()) {
+            this.parentContainerTargetY = this.parentContainerTargetY - 2000 * dt;
         }
+
+        this.parentContainer.transform.positionY = this.parentContainer.transform.positionY + (this.parentContainerTargetY - this.parentContainer.transform.positionY) * 10 * dt;
     }
 }
-
-0;
 
 export default TweenDemo;

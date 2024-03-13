@@ -7,7 +7,7 @@ export default class Vector2D {
     static zero = Object.freeze(new Vector2D(0, 0));
     static one = Object.freeze(new Vector2D(1, 1));
 
-    add(v, b) {
+    add(v, b = undefined) {
         if (b === undefined) {
             return new Vector2D(this.x + v.x, this.y + v.y);
         }

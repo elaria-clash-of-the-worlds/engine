@@ -151,11 +151,11 @@ class TweenDemoComponent extends Component {
     }
 
     update(dt) {
-        if (Input.isScrollUp()) {
+        if (Input.isMouseScrollUp()) {
             this.parentContainerTargetY = Math.min(0, this.parentContainerTargetY + 2000 * dt);
         }
 
-        if (Input.isScrollDown()) {
+        if (Input.isMouseScrollDown()) {
             this.parentContainerTargetY = this.parentContainerTargetY - 2000 * dt;
         }
 

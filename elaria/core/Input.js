@@ -27,7 +27,7 @@ export default class Input {
         });
 
         Game.canvas.addEventListener("mousemove", (e) => {
-            this.#mousePosition = this.getMousePos(Game.canvas, e);
+            this.#mousePosition = this.#getMousePos(Game.canvas, e);
         });
 
         Game.canvas.addEventListener("mousedown", (e) => {
@@ -61,7 +61,7 @@ export default class Input {
         Input.#instance = this;
     }
 
-    getMousePos(canvas, evt) {
+    #getMousePos(canvas, evt) {
         const rect = canvas.getBoundingClientRect();
         return {
             x: evt.clientX - rect.left,
@@ -90,7 +90,7 @@ export default class Input {
         return Input.#instance.#upKeys.has(keyCode);
     }
 
-    static getMousePosition() {
+    static get mousePosition() {
         return Input.#instance.#mousePosition;
     }
 
@@ -106,11 +106,11 @@ export default class Input {
         return Input.#instance.#mouseUp[button];
     }
 
-    static isScrollUp() {
+    static isMouseScrollUp() {
         return Input.#instance.#scrollUp;
     }
 
-    static isScrollDown() {
+    static isMouseScrollDown() {
         return Input.#instance.#scrollDown;
     }
 }

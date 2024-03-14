@@ -1,5 +1,7 @@
 export default class Component {
+    /** @type {import("./GameObject.js").default} */
     _gameObject = null;
+    /** @type {import("./Transform.js").default} */
     _transform = null;
 
     /**
@@ -18,6 +20,39 @@ export default class Component {
      */
     get gameObject() {
         return this._gameObject;
+    }
+
+    /**
+     * Adds a component to the GameObject.
+     *
+     * @template T
+     *
+     * @param {typeof T | T} component - the component to be added.
+     * @param {Object} params - component parameters.
+     * @return {T} - added component.
+     */
+    addComponent(component, params = {}) {
+        return this._gameObject.addComponent(component, params);
+    }
+
+    /**
+     * Retrieves a component of the specified type from the list of components.
+     *
+     * @template T
+     * @param {typeof T} component - The type of component to retrieve.
+     * @returns {T} - he component of the specified type, or undefined if not found.
+     */
+    getComponent(component) {
+        return this._gameObject.getComponent(component);
+    }
+
+    /**
+     * Removes a component from the list of components.
+     *
+     * @param {typeof Component} component - The component to be removed.
+     */
+    removeComponent(component) {
+        return this._gameObject.removeComponent(component);
     }
 
     /**

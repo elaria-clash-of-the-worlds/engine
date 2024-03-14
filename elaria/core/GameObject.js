@@ -4,7 +4,7 @@ import SceneManager from "./SceneManager.js";
 import Game from "./Game.js";
 import RectTransform from "./RectTransform.js";
 
-class GameObject {
+export default class GameObject {
     #awakeCalled = false;
     #startCalled = false;
     #onEnableCalled = false;
@@ -150,14 +150,17 @@ class GameObject {
     /**
      * Adds a component to the GameObject.
      *
-     * @param component - the component to be added.
-     * @param params - component parameters.
-     * @return {Component} - The added component.
+     * @template T
+     *
+     * @param {typeof T | T} component - the component to be added.
+     * @param {Object} params - component parameters.
+     * @return {T} - added component.
      */
     addComponent(component, params = {}) {
         let newComponent;
-        if (!(component instanceof Component))
-        {
+        if (component instanceof Component) {
+            newComponent = component;
+        } else {
             if (!(component.prototype instanceof Component)) {
                 throw new Error("The added component must be an instance of Component.");
             }
@@ -167,8 +170,6 @@ class GameObject {
             }
 
             newComponent = new component();
-        } else {
-            newComponent = component;
         }
 
         newComponent._gameObject = this;
@@ -189,8 +190,9 @@ class GameObject {
     /**
      * Retrieves a component of the specified type from the list of components.
      *
-     * @param {Object} component - The type of component to retrieve.
-     * @return {Object} The component of the specified type, or undefined if not found.
+     * @template T
+     * @param {typeof T} component - The type of component to retrieve.
+     * @returns {T} - he component of the specified type, or undefined if not found.
      */
     getComponent(component) {
         return this.components.find(c => c instanceof component);
@@ -199,7 +201,7 @@ class GameObject {
     /**
      * Removes a component from the list of components.
      *
-     * @param {Object} component - The component to be removed.
+     * @param {typeof Component} component - The component to be removed.
      */
     removeComponent(component) {
         if (component.prototype instanceof Transform) {
@@ -271,5 +273,3 @@ class GameObject {
 
     }
 }
-
-export default GameObject;

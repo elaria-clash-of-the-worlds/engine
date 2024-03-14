@@ -25,21 +25,6 @@ export default class Player extends Component {
     update(dt) {
         this.acceleration = Math.max(Player.MIN_ACCELERATION, this.acceleration + (Input.isKeyHold("ShiftLeft") ? 1 : -1) * this.acceleration * dt);
 
-        if (Input.isMouseDown(0))
-        {
-            console.log("Mouse is down");
-        }
-
-        if (Input.isMouseHold(2))
-        {
-            console.log("Mouse is hold");
-        }
-
-        if (Input.isMouseUp(1))
-        {
-            console.log("Mouse is up");
-        }
-
         if (Input.isKeyHold("KeyW")) {
             if (this.velocity.length <= Player.MAX_SPEED)
                 this.velocity.y -= this.acceleration;

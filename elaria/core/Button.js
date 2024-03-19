@@ -1,39 +1,62 @@
-import Graphic from "./Graphic.js";
 import Input from "./Input.js";
+import Component from "./Component.js";
+import Graphic from "./Graphic.js";
 
-export default class Button extends Graphic {
-    #image = new Image();
-    #hoverImage = new Image();
-    #pressedImage = new Image();
+export default class Button extends Component {
+
+    /**@type {import("./Graphic.js").default}*/
+    #graphic = null;
+    /**@type {function}*/
+    onClick = null;
     #isHovered = false;
     #isPressed = false;
-    onClick = null;
+    #pressedColor = "white";
+    #hoverColor = "grey";
 
-    constructor(imageSource, hoverImageSource, pressedImageSource) {
-        super();
+    #originalGraphicColor;
 
-        this.#image.src = imageSource;
-        this.#hoverImage.src = hoverImageSource;
-        this.#pressedImage.src = pressedImageSource;
+    /**@return {Graphic}*/
+    get graphic() {
+        return this.#graphic;
     }
 
-    draw(ctx, x, y, w, h) {
-        ctx.save();
-        if (this.#isPressed) {
-            // ctx.drawImage(this.#pressedImage, x, y, w, h);
-            ctx.fillStyle = "blue";
-        } else if (this.#isHovered) {
-            // ctx.drawImage(this.#hoverImage, x, y, w, h);
-            ctx.fillStyle = "red";
-        } else {
-            // ctx.drawImage(this.#image, x, y, w, h);
-            ctx.fillStyle = "gray";
+    /**@param {Graphic} value - graphic to set*/
+    set graphic(value) {
+        this.#graphic = value;
+    }
+
+
+    get pressedColor() {
+        return this.#pressedColor;
+    }
+
+    set pressedColor(value) {
+        this.#pressedColor = value;
+    }
+
+    get hoverColor() {
+        return this.#hoverColor;
+    }
+
+    set hoverColor(value) {
+        this.#hoverColor = value;
+    }
+
+    awake() {
+        if (this.graphic == null) {
+            this.graphic = this.gameObject.getComponent(Graphic);
         }
-        ctx.fillRect(x, y, w, h);
-        ctx.restore();
+
+        if (this.graphic == null) {
+            console.log("Graphic component must be on the same object as a Button was.");
+        } else {
+            this.#originalGraphicColor = this.graphic.tintColor;
+        }
     }
 
     update(dt) {
+        if (this.graphic == null) return;
+
         const mousePos = Input.mousePosition;
         const rt = this.transform;
 
@@ -55,6 +78,14 @@ export default class Button extends Graphic {
             if (Input.isMouseUp(0)) {
                 this.#isPressed = false;
             }
+        }
+
+        if (this.#isPressed) {
+            this.graphic.tintColor = this.#pressedColor;
+        } else if (this.#isHovered) {
+            this.graphic.tintColor = this.#hoverColor;
+        } else {
+            this.graphic.tintColor = null;
         }
     }
 
@@ -108,13 +139,5 @@ export default class Button extends Graphic {
             }
         }
         return c;
-    }
-
-    onMouseDown() {
-        this.#isPressed = true;
-    }
-
-    onMouseUp() {
-        this.#isPressed = false;
     }
 }

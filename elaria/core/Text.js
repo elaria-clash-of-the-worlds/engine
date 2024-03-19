@@ -3,9 +3,13 @@ import Graphic from "./Graphic.js";
 export default class Text extends Graphic {
     #text = "";
     #font = "16px Arial";
-    #color = "black";
     #horizontalAlign = "center";
     #verticalAlign = "center";
+
+    constructor() {
+        super();
+        super.color = "black";
+    }
 
     get text() {
         return this.#text;
@@ -21,14 +25,6 @@ export default class Text extends Graphic {
 
     set font(font) {
         this.#font = font;
-    }
-
-    get color() {
-        return this.#color;
-    }
-
-    set color(color) {
-        this.#color = color;
     }
 
     get horizontalAlign() {
@@ -50,7 +46,6 @@ export default class Text extends Graphic {
     draw(ctx, x, y, w, h) {
         ctx.save();
         ctx.font = this.#font;
-        ctx.fillStyle = this.#color;
         ctx.textBaseline = this.#verticalAlign === "center" ? "middle" : this.#verticalAlign;
         ctx.textAlign = this.#horizontalAlign;
         x = this.#horizontalAlign === "left" ? x : (this.#horizontalAlign === "center" ? x + w / 2 : x + w);

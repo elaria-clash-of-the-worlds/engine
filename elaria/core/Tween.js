@@ -265,41 +265,99 @@ class Tween {
     }
 
     static lerpVector2DFunction(v1, v2, t) {
-        const lerpedX = v1.x + (v2.x - v1.x) * t;
-        const lerpedY = v1.y + (v2.y - v1.y) * t;
-        return new Vector2D(lerpedX, lerpedY);
+        return new Vector2D(v1.x + (v2.x - v1.x) * t, v1.y + (v2.y - v1.y) * t);
     }
 
     static delay(duration) {
         return Tween.create(0, 1, duration);
     }
 
+    /**
+     * @param {Transform} transform
+     * @param {Vector2D} startValue
+     * @param {Vector2D} endValue
+     * @param {number} duration
+     * @returns {Tween}
+     */
     static position(transform, startValue, endValue, duration) {
         return Tween.create(startValue, endValue, duration).bindTo((value) => transform.position = value);
     }
 
+    /**
+     * @param {Transform} transform
+     * @param {number} startValue
+     * @param {number} endValue
+     * @param {number} duration
+     * @returns {Tween}
+     */
     static positionX(transform, startValue, endValue, duration) {
         return Tween.create(startValue, endValue, duration).bindTo((value) => transform.positionX = value);
     }
 
+    /**
+     * @param {Transform} transform
+     * @param {number} startValue
+     * @param {number} endValue
+     * @param {number} duration
+     * @returns {Tween}
+     */
     static positionY(transform, startValue, endValue, duration) {
         return Tween.create(startValue, endValue, duration).bindTo((value) => transform.positionY = value);
     }
 
+    /**
+     * @param {Transform} transform
+     * @param {Vector2D} startValue
+     * @param {Vector2D} endValue
+     * @param {number} duration
+     * @returns {Tween}
+     */
     static localPosition(transform, startValue, endValue, duration) {
         return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localPosition = value);
     }
 
+    /**
+     * @param {Transform} transform
+     * @param {number} startValue
+     * @param {number} endValue
+     * @param {number} duration
+     * @returns {Tween}
+     */
     static localPositionX(transform, startValue, endValue, duration) {
         return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localPositionX = value);
     }
 
+    /**
+     * @param {Transform} transform
+     * @param {number} startValue
+     * @param {number} endValue
+     * @param {number} duration
+     * @returns {Tween}
+     */
     static localPositionY(transform, startValue, endValue, duration) {
         return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localPositionY = value);
     }
 
-    static localRotation(transform, startValue, endValue, duration) {
-        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localRotation = value);
+    /**
+     * @param {Transform} transform
+     * @param {number} startRotation
+     * @param {number} endRotation
+     * @param {number} duration
+     * @returns {Tween}
+     */
+    static localRotation(transform, startRotation, endRotation, duration) {
+        return Tween.create(startRotation, endRotation, duration).bindTo((value) => transform.localRotation = value);
+    }
+
+    /**
+    * @param {Transform} transform
+    * @param {Vector2D} startValue
+    * @param {Vector2D} endValue
+    * @param {number} duration
+    * @returns {Tween}
+    */
+    static localScale(transform, startValue, endValue, duration) {
+        return Tween.create(startValue, endValue, duration).bindTo((value) => transform.localScale = value);
     }
 }
 

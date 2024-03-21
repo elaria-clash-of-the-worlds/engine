@@ -16,7 +16,12 @@ export default class AnimatedSprite extends Sprite {
     }
 
     removeAnimation(name) {
-        return this.#animations.splice(this.#animations.find(a => a.name === name), 1);
+        const index = this.#animations.findIndex(a => a.name === name);
+        if (this.#activeAnimation === index)
+        {
+            this.#activeAnimation = 0;
+        }
+        return this.#animations.splice(index, 1);
     }
 
     playAnimation(name) {
@@ -30,6 +35,7 @@ export default class AnimatedSprite extends Sprite {
         this.#activeAnimation = index;
         this.#elapsedTime = 0;
         this.#animationCompleted = false;
+        this.#animations[this.#activeAnimation].resetFramePosition();
     }
 
     update(dt) {
@@ -39,11 +45,10 @@ export default class AnimatedSprite extends Sprite {
 
         const animation = this.#animations[this.#activeAnimation];
 
-        if (this.#elapsedTime > animation.timeForFrame) {
+        if (this.#elapsedTime >= animation.timeOnFrame) {
             this.#elapsedTime = 0;
 
-            if (animation.spriteSheet.isLastFrame && !animation.looped)
-            {
+            if (animation.spriteSheet.isLastFrame && !animation.looped) {
                 this.#animationCompleted = true;
                 if (animation.onPlayEnd != null) {
                     animation.onPlayEnd();
@@ -51,13 +56,10 @@ export default class AnimatedSprite extends Sprite {
                 return;
             }
 
-            if (animation.direction === "forward")
-            {
-                animation.spriteSheet.nextFrame();
-            }
-            else if (animation.direction === "backward")
-            {
-                animation.spriteSheet.prevFrame();
+            if (animation.direction === "forward") {
+                animation.nextFrame();
+            } else if (animation.direction === "backward") {
+                animation.prevFrame();
             }
         }
     }
@@ -69,10 +71,10 @@ export default class AnimatedSprite extends Sprite {
         const animation = this.#animations[this.#activeAnimation];
         ctx.drawImage(
             animation.image,
-            animation.spriteSheet.framePosX,
-            animation.spriteSheet.framePosY,
-            animation.spriteSheet.frameWidth,
-            animation.spriteSheet.frameHeight,
+            animation.framePosX,
+            animation.framePosY,
+            animation.frameWidth,
+            animation.frameHeight,
             -this.width / 2,
             -this.height / 2,
             this.width,
@@ -83,7 +85,14 @@ export default class AnimatedSprite extends Sprite {
     }
 
     clone() {
+        /**@type {AnimatedSprite}*/
         const clonedAnimatedSprite = super.clone();
+
+        clonedAnimatedSprite.#animations = this.#animations.map(animation => animation.clone());
+        clonedAnimatedSprite.#elapsedTime = this.#elapsedTime;
+        clonedAnimatedSprite.#activeAnimation = this.#activeAnimation;
+        clonedAnimatedSprite.#animationCompleted = this.#animationCompleted;
+
         return clonedAnimatedSprite;
     }
 }
@@ -108,20 +117,61 @@ export class Animation {
         this.#image.src = value;
     }
 
+    get frameWidth() {
+        return this.spriteSheet.frameWidth;
+    }
+
+    get frameHeight() {
+        return this.spriteSheet.frameHeight;
+    }
+
+    get framePosX() {
+        return this.spriteSheet.framePosX;
+    }
+
+    get framePosY() {
+        return this.spriteSheet.framePosY;
+    }
+
     /**
      * @param {string} name - animation name
      * @param {string} imageSource - path to image for animation
      * @param {import("./SpriteSheet.js").default} spriteSheet - sprite sheet for animation
-     * @param {number} timeForFrame - time for show one frame
+     * @param {number} timeOnFrame - time for show one frame
      * @param {string} direction - animation direction (forward | backward)
      * @param {boolean} looped - is animation looped
      */
-    constructor(name, imageSource, spriteSheet, timeForFrame = 0.1, direction = "forward", looped = false) {
+    constructor(name, imageSource, spriteSheet, timeOnFrame, direction, looped) {
         this.name = name;
         this.imageSource = imageSource;
         this.spriteSheet = spriteSheet;
-        this.timeForFrame = timeForFrame;
-        this.direction = direction;
-        this.looped = looped;
+        this.timeOnFrame = timeOnFrame || 0.1;
+        this.direction = direction || "forward";
+        this.looped = looped || false;
+    }
+
+    resetFramePosition() {
+        this.spriteSheet.resetFramePosition();
+    }
+
+    prevFrame() {
+        this.spriteSheet.prevFrame();
+    }
+
+    nextFrame() {
+        this.spriteSheet.nextFrame();
+    }
+
+    clone() {
+        const clonedAnimation = new Animation(
+            this.name,
+            this.imageSource,
+            this.spriteSheet.clone(),
+            this.timeOnFrame,
+            this.direction,
+            this.looped
+        );
+        clonedAnimation.onPlayEnd = this.onPlayEnd;
+        return clonedAnimation;
     }
 }

@@ -4,6 +4,9 @@ export default class Sprite extends Component {
     #image = new Image();
     #pixelPerfect = false;
 
+    /**
+     * @return {HTMLImageElement}
+     */
     get image() {
         return this.#image;
     }
@@ -45,6 +48,7 @@ export default class Sprite extends Component {
         clonedSprite.imageSource = this.imageSource;
         clonedSprite.width = this.width;
         clonedSprite.height = this.height;
+        clonedSprite.pixelPerfect = this.pixelPerfect;
         return clonedSprite;
     }
 

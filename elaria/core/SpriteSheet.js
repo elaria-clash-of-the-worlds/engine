@@ -76,6 +76,10 @@ export default class SpriteSheet {
         this.#frameIndex = this.#startFrom;
     }
 
+    resetFramePosition() {
+        this.#frameIndex = this.#startFrom;
+    }
+
     prevFrame() {
         this.#frameIndex--;
         if (this.#frameIndex < this.#startFrom)
@@ -86,5 +90,15 @@ export default class SpriteSheet {
         this.#frameIndex++;
         if (this.#frameIndex >= this.#startFrom + this.#framesCount)
             this.#frameIndex = this.#startFrom;
+    }
+
+    clone() {
+        return new SpriteSheet(
+            this.#frameWidth,
+            this.#frameHeight,
+            this.#framesCount,
+            this.#columns,
+            this.#startFrom
+        );
     }
 }

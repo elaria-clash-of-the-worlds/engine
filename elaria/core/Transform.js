@@ -13,6 +13,11 @@ export default class Transform extends Component {
         this.setParent(null);
     }
 
+    /**@return {Transform | RectTransform}*/
+    get transform() {
+        return this;
+    }
+
     /**
      * Get the world position of the object.
      *
@@ -202,7 +207,7 @@ export default class Transform extends Component {
     /**
      * Returns the parent of the current object.
      *
-     * @return {Transform} The parent of the current object, or null if the current object is the root parent.
+     * @return {Transform | RectTransform} The parent of the current object, or null if the current object is the root parent.
      */
     get parent() {
         if (this.#parent === this.gameObject.scene._container) {

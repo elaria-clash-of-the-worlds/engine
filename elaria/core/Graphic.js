@@ -54,30 +54,30 @@ export default class Graphic extends Component {
         this.#graphicCanvas.width = w;
         this.#graphicCanvas.height = h;
 
-        const ctx2 = this.#graphicCanvas.getContext("2d");
-        ctx2.clearRect(0, 0, w, h);
+        const thisContext = this.#graphicCanvas.getContext("2d");
 
-        ctx2.save();
-        this.draw(ctx2, 0, 0, w, h);
+        thisContext.clearRect(0, 0, w, h);
+        thisContext.save();
 
-        ctx2.imageSmoothingEnabled = !this.#pixelPerfect;
+        thisContext.imageSmoothingEnabled = !this.#pixelPerfect;
 
-        ctx2.globalCompositeOperation = "multiply";
-        ctx2.fillStyle = this.color;
-        ctx2.fillRect(0, 0, w, h);
+        thisContext.fillStyle = this.color;
+        this.draw(thisContext, 0, 0, w, h);
+
+        thisContext.globalCompositeOperation = "multiply";
+        thisContext.fillRect(0, 0, w, h);
 
         if (this.tintColor != null)
         {
-            ctx2.fillStyle = this.tintColor;
-            ctx2.fillRect(0, 0, w, h);
+            thisContext.fillStyle = this.tintColor;
+            thisContext.fillRect(0, 0, w, h);
         }
 
-        ctx2.fillStyle = this.color;
-        ctx2.globalCompositeOperation = "destination-in";
-        this.draw(ctx2, 0, 0, w, h);
+        thisContext.globalCompositeOperation = "destination-in";
+        this.draw(thisContext, 0, 0, w, h);
 
-        ctx2.restore();
+        thisContext.restore();
 
-        ctx.drawImage(this.#graphicCanvas, -w * rt.pivot.x, -h * rt.pivot.y, w, rt.height);
+        ctx.drawImage(this.#graphicCanvas, -w * rt.pivot.x, -h * rt.pivot.y, w, h);
     }
 }

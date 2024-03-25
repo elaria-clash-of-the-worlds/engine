@@ -109,8 +109,8 @@ export default class GameObject {
         for (const component of this.components) {
             component.render(context);
         }
-        for (const transform of this.transform.children) {
-            transform.gameObject._render();
+        for (const child of this.transform.children) {
+            child.gameObject._render();
         }
 
         context.restore();

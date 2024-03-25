@@ -7,6 +7,11 @@ export default class Game {
     #activeScene;
     #canvas;
     #input;
+    #fps;
+
+    get fps() {
+        return this.#fps;
+    }
 
     constructor(canvasElement) {
         this.#activeScene = null;
@@ -35,8 +40,9 @@ export default class Game {
         const gameLoop = (now) => {
             this.#update();
             this.#render();
-            this.#deltaTime = (now - lastTime) / 1000.0;
+            this.#deltaTime = (now - lastTime) / 1000;
             lastTime = now;
+            this.#fps = 1 / this.#deltaTime;
 
             window.requestAnimationFrame(gameLoop);
         };

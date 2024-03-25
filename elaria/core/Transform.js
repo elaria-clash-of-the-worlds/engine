@@ -198,7 +198,7 @@ export default class Transform extends Component {
     /**
      * Get the children of the Transform.
      *
-     * @return {Array<Transform>}
+     * @return {Array<Transform | RectTransform>}
      */
     get children() {
         return this._children;

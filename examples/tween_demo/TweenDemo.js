@@ -1,6 +1,16 @@
-import {Component, Debug, GameObject, SceneDescription, Sprite, Tween, Vector2D, WorldText} from "../../core/Elaria.js";
-import {Ease, LoopType} from "../../core/Tween.js";
-import Input from "../../core/Input.js";
+const {
+    SceneDescription,
+    GameObject,
+    Component,
+    Sprite,
+    Tween,
+    Ease,
+    LoopType,
+    WorldText,
+    Vector2D,
+    Debug,
+    Input
+} = elaria;
 
 class TweenDemo extends SceneDescription {
     constructor() {
@@ -54,7 +64,7 @@ class TweenDemoComponent extends Component {
             easingObject.transform.setParent(demoObject.transform);
 
             const sprite = easingObject.addComponent(Sprite);
-            sprite.imageSource = "/elaria/examples/assets/sprite.png";
+            sprite.imageSource = "../assets/sprite.png";
             sprite.width = 48;
             sprite.height = 48;
 
@@ -109,9 +119,9 @@ class TweenDemoComponent extends Component {
 
             const sprite = easingObject.addComponent(Sprite);
             if (loopType === LoopType.incremental) {
-                sprite.imageSource = "/elaria/examples/assets/coka.png";
+                sprite.imageSource = "../assets/coka.png";
             } else {
-                sprite.imageSource = "/elaria/examples/assets/sprite.png";
+                sprite.imageSource = "../assets/sprite.png";
             }
             sprite.width = 48;
             sprite.height = 48;

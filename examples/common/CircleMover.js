@@ -1,5 +1,4 @@
-import Component from "../core/Component.js";
-import Vector2D from "../core/Vector2D.js";
+const {Vector2D, Component} = elaria;
 
 export default class CircleMover extends Component {
     #t = 0;

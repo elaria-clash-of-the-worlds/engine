@@ -20,4 +20,10 @@ export default class UIImage extends Graphic {
             ctx.drawImage(this.#image, x, y, w, h);
         }
     }
+
+    clone() {
+        const clonedUIImage = super.clone();
+        clonedUIImage.imageSource = this.imageSource;
+        return clonedUIImage;
+    }
 }

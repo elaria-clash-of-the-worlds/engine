@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Common Demo</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../../library/elaria.js"></script>
     <script type="module">
-        import {Game, SceneManager} from "./elaria/core/Elaria.js";
-        import ExampleLevel1 from "./elaria/examples/ExampleLevel1.js";
-        import ExampleLevel2 from "./elaria/examples/ExampleLevel2.js";
+        const {Game, SceneManager} = elaria;
+        import ExampleLevel1 from "./ExampleLevel1.js";
+        import ExampleLevel2 from "./ExampleLevel2.js";
 
         const game = new Game(document.getElementById("canvas"));
         SceneManager.registerScene(new ExampleLevel1());

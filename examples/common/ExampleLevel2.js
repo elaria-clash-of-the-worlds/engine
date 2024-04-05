@@ -1,4 +1,4 @@
-import {AudioSource, GameObject, SceneDescription, Sprite, Vector2D} from "../core/Elaria.js";
+const {AudioSource, GameObject, SceneDescription, Sprite, Vector2D} = elaria;
 import Player from "./Player.js";
 import CircleMover from "./CircleMover.js";
 
@@ -16,12 +16,12 @@ class ExampleLevel2 extends SceneDescription {
         playerComponent.loadSceneIndex = 0;
 
         const sprite = player.addComponent(Sprite);
-        sprite.imageSource = "/elaria/examples/assets/coka.png";
+        sprite.imageSource = "../assets/coka.png";
         sprite.width = 156;
         sprite.height = 156;
 
         const audioSource = player.addComponent(AudioSource);
-        audioSource.source = "/elaria/examples/assets/bubbles.wav";
+        audioSource.source = "../assets/bubbles.wav";
 
         const childObject = new GameObject("Child object");
         childObject.transform.localPosition = new Vector2D(100, 0);
@@ -29,13 +29,9 @@ class ExampleLevel2 extends SceneDescription {
         childObject.addComponent(CircleMover);
 
         const childSprite = childObject.addComponent(Sprite);
-        childSprite.imageSource = "/elaria/examples/assets/coka.png";
+        childSprite.imageSource = "../assets/coka.png";
         childSprite.width = 50;
         childSprite.height = 50;
-    }
-
-    onKey(key, direction) {
-        console.info(`Key ${key} is pressed ${direction}, I am the second scene.`);
     }
 }
 

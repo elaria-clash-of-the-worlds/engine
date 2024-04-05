@@ -1,4 +1,4 @@
-import {
+const {
     AnchorsPreset,
     GameObject,
     Graphic,
@@ -7,7 +7,7 @@ import {
     Tween,
     Vector2D,
     WorldText
-} from "../../core/Elaria.js";
+} = elaria;
 
 export default class RectTransformDemo extends SceneDescription {
     constructor() {

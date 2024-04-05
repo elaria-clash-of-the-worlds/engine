@@ -14,5 +14,8 @@ export {default as Graphic} from "./ui/Graphic.js";
 export {default as Button} from "./ui/Button.js";
 export {default as UIImage} from "./ui/UIImage.js";
 export {default as Text} from "./ui/Text.js";
+export {default as Input} from "./Input.js";
+export {AnimatedSprite, Animation} from "./AnimatedSprite.js";
+export {default as SpriteSheet} from "./SpriteSheet.js";
 export {Tween, Ease, LoopType} from "./Tween.js";
 

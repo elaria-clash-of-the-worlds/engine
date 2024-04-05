@@ -66,4 +66,16 @@ export default class Text extends Graphic {
 
         ctx.drawImage(this.virtualCanvas, -rt.pivot.x * w, -rt.pivot.y * h);
     }
+
+    clone() {
+        const clonedText = super.clone();
+        clonedText.text = this.text;
+        clonedText.font = this.font;
+        clonedText.horizontalAlign = this.horizontalAlign;
+        clonedText.verticalAlign = this.verticalAlign;
+        clonedText.color = this.color;
+        clonedText.tintColor = this.tintColor;
+        clonedText.pixelPerfect = this.pixelPerfect;
+        return clonedText;
+    }
 }

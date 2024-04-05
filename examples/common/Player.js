@@ -1,9 +1,4 @@
-import Component from "../core/Component.js";
-import Vector2D from "../core/Vector2D.js";
-import Debug from "../debug/Debug.js";
-import AudioSource from "../core/AudioSource.js";
-import SceneManager from "../core/SceneManager.js";
-import Input from "../core/Input.js";
+const {Component, Vector2D, Debug, AudioSource, SceneManager, Input} = elaria;
 
 export default class Player extends Component {
     static MAX_SPEED = 500;

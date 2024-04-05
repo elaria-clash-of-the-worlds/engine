@@ -1,6 +1,6 @@
 import Sprite from "./Sprite.js";
 
-export default class AnimatedSprite extends Sprite {
+export class AnimatedSprite extends Sprite {
     #elapsedTime = 0;
     #activeAnimation = 0;
     #animationCompleted = false;

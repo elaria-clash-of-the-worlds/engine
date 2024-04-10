@@ -6,6 +6,7 @@ export default class Game {
     #deltaTime = 0;
     #activeScene;
     #canvas;
+    #needToResize;
     #input;
     #fps;
 
@@ -16,8 +17,13 @@ export default class Game {
     constructor(canvasElement) {
         this.#activeScene = null;
         this.#canvas = canvasElement;
-        this.#canvas.width = window.innerWidth;
-        this.#canvas.height = window.innerHeight;
+        this.#canvas.width = this.#canvas.clientWidth;
+        this.#canvas.height = this.#canvas.clientHeight;
+
+        const canvasResizeObserver = new ResizeObserver(() => {
+            this.#needToResize = true;
+        });
+        canvasResizeObserver.observe(this.#canvas);
 
         Game.#instance = this;
     }
@@ -66,7 +72,14 @@ export default class Game {
 
     #render() {
         if (this.#activeScene) {
-            Game.canvas.getContext("2d").clearRect(0, 0, Game.canvas.width, Game.canvas.height);
+            if (this.#needToResize) {
+                this.#canvas.width = this.#canvas.clientWidth;
+                this.#canvas.height = this.#canvas.clientHeight;
+                this.#needToResize = false;
+            } else {
+                const {width, height} = this.#canvas;
+                this.#canvas.getContext("2d").clearRect(0, 0, width, height);
+            }
             this.#activeScene.render();
         }
     }

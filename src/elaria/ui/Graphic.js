@@ -1,5 +1,5 @@
-import Component from "../Component.js";
-import RectTransform from "../RectTransform.js";
+import Component from "../core/Component.js";
+import RectTransform from "../core/RectTransform.js";
 
 export default class Graphic extends Component {
     #color = "rgba(255, 255, 255, 255)";

@@ -1,4 +1,4 @@
-import Game from "./Game.js";
+import Game from "../core/Game.js";
 
 export default class Input {
     #pressedKeys = new Set();

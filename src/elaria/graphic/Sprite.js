@@ -1,4 +1,4 @@
-import Component from "./Component.js";
+import Component from "../core/Component.js";
 
 export default class Sprite extends Component {
     #image = new Image();

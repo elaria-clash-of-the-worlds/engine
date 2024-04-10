@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./src/elaria/core/Elaria.js",
+    entry: "./src/elaria/Elaria.js",
     output: {
         filename: "elaria.js",
         path: path.resolve(__dirname, "library"),

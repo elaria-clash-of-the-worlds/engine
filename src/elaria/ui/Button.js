@@ -1,5 +1,5 @@
-import Input from "../Input.js";
-import Component from "../Component.js";
+import Input from "../input/Input.js";
+import Component from "../core/Component.js";
 import Graphic from "./Graphic.js";
 
 export default class Button extends Component {

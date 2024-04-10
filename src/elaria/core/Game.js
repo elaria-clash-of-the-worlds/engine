@@ -1,5 +1,5 @@
 import SceneManager from "./SceneManager.js";
-import Input from "./Input.js";
+import Input from "../input/Input.js";
 
 export default class Game {
     static #instance;

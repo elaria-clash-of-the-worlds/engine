@@ -1,5 +1,5 @@
 import Transform from "./Transform.js";
-import Vector2D from "./Vector2D.js";
+import Vector2D from "../types/Vector2D.js";
 import Game from "./Game.js";
 
 export default class RectTransform extends Transform {

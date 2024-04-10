@@ -1,5 +1,5 @@
 import Component from "./Component.js";
-import Vector2D from "./Vector2D.js";
+import Vector2D from "../types/Vector2D.js";
 import GameObject from "./GameObject.js";
 
 export default class Transform extends Component {

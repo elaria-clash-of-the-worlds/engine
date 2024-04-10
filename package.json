@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Simple game engine",
   "main": "library/elaria.js",
-  "module": "src/elaria/core/Elaria.js",
+  "module": "src/elaria/Elaria.js",
   "dependencies": {
     "acorn": "^8.11.2",
     "acorn-jsx": "^5.3.2",

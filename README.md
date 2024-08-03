@@ -33,6 +33,9 @@ It supports:
 
 * Follow the examples in JSDocs to create a game. We are currently working on a documentation website. Please, stand by.
 
+## `🌍` `Showcases`
+* [Elaria: Clash of the Worlds](https://github.com/elaria-clash-of-the-worlds/game)
+
 ## `🛡️` `Licence`
 MIT
 
